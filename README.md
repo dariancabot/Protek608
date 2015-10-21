@@ -1,9 +1,14 @@
 # Protek608
-A data aquisition Java library for the Protek 608 digital multimeter. [Visit the project homepage](http://dariancabot.com/category/projects/protek-608-dmm/) for detailed blogs about development and how this software has been used in the field.
+A data aquisition Java library for the Protek 608 digital multimeter. [Visit the project homepage](http://dariancabot.com/category/projects/protek-608-dmm/) for more information about the Protek 608 digital multimeter, development blogs, and how this software has been used in the field.
 
 ## Current Release
 
-[Get the protek608 v0.9.0-alpha pre-relase](https://github.com/dariancabot/Protek608/releases/tag/v0.9.0-alpha).
+* [Pre-release v0.9.0-alpha](https://github.com/dariancabot/Protek608/releases/tag/v0.9.0-alpha)
+
+## Planned Releases
+
+* Release v1.0.0 - Full protocol decoding.
+* Release v1.1.0 - Enhanced data aquisition and statistics.
 
 ## Documentation
 
