@@ -3,7 +3,7 @@ A data aquisition Java library for the Protek 608 digital multimeter. [Visit the
 
 ## Current Release
 
-[Get the protek608 v0.9.0-alpha pre-relase](https://github.com/dariancabot/protek608/releases/tag/v0.9.0-alpha).
+[Get the protek608 v0.9.0-alpha pre-relase](https://github.com/dariancabot/Protek608/releases/tag/v0.9.0-alpha).
 
 ## Documentation
 
