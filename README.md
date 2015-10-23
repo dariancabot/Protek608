@@ -61,7 +61,7 @@ MyNewApp.protek608.data.mainValue.statistics.setEnabled(true);
 // Let's get the average value.
 MyNewApp.protek608.data.mainValue.statistics.getAverage()
 
-// Now the user change to a different measurement, so we should reset the statistics.
+// The user changed to a different measurement type so let's reset the stats.
 MyNewApp.protek608.data.mainValue.statistics.reset();
 
 ```
