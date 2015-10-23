@@ -1,6 +1,5 @@
 package com.dariancabot.protek608;
 
-import java.util.Date;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
@@ -15,58 +14,18 @@ public final class Protek608
     private SerialPort serialPort;
     private final Decoder decoder;
 
+    private String[] portNames;
+    private boolean isConnected;
+
     /**
      * Stores all of the readings data, both most recent and historical.
      */
     public Data data;
 
-    private String[] portNames;
-
-    private boolean isConnected;
-    private Date lastConnect;
-
-
-    public Protek608()
-    {
-        data = new Data();
-        decoder = new Decoder(data);
-
-        // Load existing serial ports.
-        refreshSerialPorts();
-    }
-
-
-    private void refreshSerialPorts()
-    {
-
-        // First disconnect if needed...
-        if (isConnected)
-        {
-            disconnectSerialPort();
-        }
-
-        // TODO: For more com port details (jssc can only give name), see: http://stackoverflow.com/q/6362775
-        // Populate combobox with names of existing ports...
-        System.out.println("Getting serial port list...");
-
-        for (String port : jssc.SerialPortList.getPortNames())
-        {
-            // DO SOMETHING HERE (ADD TO LIST?)
-            System.out.println("Found port: " + port);
-        }
-
-        portNames = jssc.SerialPortList.getPortNames();
-    }
-
-
-    public String[] getPortNames()
-    {
-        return portNames;
-    }
-
 
     /**
-     * Defines the commands that can be sent to the Protek608 using the {@link #sendCommand(Command) sendCommand} method.
+     * Defines the commands that can be sent to the Protek608 using the
+     * {@link #sendCommand(Command) sendCommand} method.
      */
     public enum Commands
     {
@@ -101,10 +60,40 @@ public final class Protek608
     }
 
 
+    public Protek608()
+    {
+        data = new Data();
+        decoder = new Decoder(data);
+
+        refreshSerialPorts(); // Load existing serial ports.
+    }
+
+
+    private void refreshSerialPorts()
+    {
+
+        // First disconnect if needed...
+        if (isConnected)
+        {
+            disconnectSerialPort();
+        }
+
+        // TODO: For more com port details (jssc can only give name), see: http://stackoverflow.com/q/6362775
+        portNames = jssc.SerialPortList.getPortNames();
+    }
+
+
+    public String[] getPortNames()
+    {
+        return portNames;
+    }
+
+
     /**
      * Send a command to the Protek 608 multimeter over the serial connection.
      *
-     * If not connected, there is no warning, the send command will fail silently.
+     * If not connected, there is no warning, the send command will fail
+     * silently.
      *
      * @param command
      */
@@ -127,18 +116,6 @@ public final class Protek608
                 System.out.println("Failed to write.");
             }
         }
-    }
-
-
-    /**
-     * Sets the SerialPort. If the current SerialPort is connected, it will attempt to close this first.
-     *
-     * @param serialPort The SerialPort to use.
-     */
-    private void setSerialPort(SerialPort serialPort)
-    {
-        disconnectSerialPort(); // Disconnect first.
-        this.serialPort = serialPort;
     }
 
 
@@ -203,7 +180,6 @@ public final class Protek608
             System.out.println("Connected to serial port: " + serialPort.getPortName() + ".");
 
             isConnected = true;
-            lastConnect = new Date();
 
             data.mainValue.statistics.isEnabled(true);
 
