@@ -12,7 +12,59 @@ A data aquisition Java library for the Protek 608 digital multimeter. [Visit the
 
 ## Documentation
 
-Documentation on this library and implementation is coming soon. In the meantime, you can find more information on the [project home page](http://dariancabot.com/category/projects/protek-608-dmm/).
+Detailed documentation on this library and implementation is coming soon. In the meantime, you can find more information on the [project home page](http://dariancabot.com/category/projects/protek-608-dmm/).
+
+### Quick Start
+
+Your main class may look something like this:
+```
+import com.dariancabot.protek608.Protek608;
+
+public class MyNewApp
+{
+  public static void main(String[] args)
+  {
+    // Create a new Protek608 instance and set the Event Listener for receiveing data.
+    Protek608 protek608 = new Protek608();
+    Events events = new Events();
+    protek608.setEventListener(events);
+    
+    // Connect to the "COM3" serial port, and start receiving data.
+    protek608.connectSerialPort("COM3");
+  }
+}
+```
+
+Your event listener class (to handle data) may look like this:
+```
+import com.dariancabot.protek608.EventListener;
+
+public class Events implements EventListener
+{
+  @Override
+  public void dataUpdateEvent()
+  {
+    Double measurement = MyNewApp.protek608.data.mainValue.getValueDouble();
+    System.out.println("Measurement = " + measurement);
+  }
+}
+```
+
+You can also access statistical data like this:
+```
+// Enable statistics for the main DMM value.
+MyNewApp.protek608.data.mainValue.statistics.setEnabled(true);
+
+// Now as data is received, it's included in the statistic calculations.
+// ... time passes, measurements are read ...
+
+// Let's get the average value.
+MyNewApp.protek608.data.mainValue.statistics.getAverage()
+
+// Now the user change to a different measurement, so we should reset the statistics.
+MyNewApp.protek608.data.mainValue.statistics.reset();
+
+```
 
 ## Development Environment
 
