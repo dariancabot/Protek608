@@ -69,7 +69,8 @@ public final class Communications implements SerialPortEventListener
 
     //-----------------------------------------------------------------------
     /**
-     * Implementation of the serialEvent method to see events that happened to the port. This only report those events that are set in the SerialPort
+     * Implementation of the serialEvent method to see events that happened to
+     * the port. This only report those events that are set in the SerialPort
      * mask.
      *
      * @param event the new SerialPort
@@ -105,6 +106,9 @@ public final class Communications implements SerialPortEventListener
                             {
                                 // We have a full valid packet, decode it.
                                 decoder.decodeSerialData(packetBuffer);
+
+                                // Print valid packet in hex (debugging).
+                                //System.out.println(bytesToHex(packetBuffer));
                             }
                         }
                         else if (packetBuffer[0] == 0x5b)//packetStartByte)
@@ -161,6 +165,28 @@ public final class Communications implements SerialPortEventListener
     public boolean isDsrOn()
     {
         return isDsrOn;
+    }
+
+    //-----------------------------------------------------------------------
+    /**
+     * Converts a byte array into a hex String.
+     *
+     * @see http://stackoverflow.com/a/9855338
+     */
+    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+
+    public static String bytesToHex(byte[] bytes)
+    {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j ++)
+        {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+
+        return new String(hexChars);
     }
 
 }

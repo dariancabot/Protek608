@@ -16,6 +16,8 @@ public final class Data
 
     public Date lastUpdate = new Date();
 
+    public int barGraph = 0;
+
 
     public class Value
     {
@@ -55,7 +57,8 @@ public final class Data
 
 
             /**
-             * Resets all statistics by clearing all counters, averages, and other values. Dues not change the "enabled" parameter.
+             * Resets all statistics by clearing all counters, averages, and
+             * other values. Dues not change the "enabled" parameter.
              */
             public void reset()
             {
@@ -228,13 +231,17 @@ public final class Data
 
 
         /**
-         * Get the value represented as a String that resembles what is displayed on the LCD.
+         * Get the value represented as a String that resembles what is
+         * displayed on the LCD.
          *
-         * This also includes non-numerical values (i.e. words on LCD like "Shrt", "OPEn").
+         * This also includes non-numerical values (i.e. words on LCD like
+         * "Shrt", "OPEn").
          * <p>
-         * For an exact representation (including whitespace), use the {@link #getValueVerbatim() getValueVerbatim} method.
+         * For an exact representation (including whitespace), use the
+         * {@link #getValueVerbatim() getValueVerbatim} method.
          * <p>
-         * For a numerical value, {@link #getValueDouble() getValueDouble} use the method.
+         * For a numerical value, {@link #getValueDouble() getValueDouble} use
+         * the method.
          *
          * @return
          */
@@ -245,9 +252,11 @@ public final class Data
 
 
         /**
-         * Gets a more accurate representation what the value looks like on the Protek608 LCD including whitespace padding, etc.
+         * Gets a more accurate representation what the value looks like on the
+         * Protek608 LCD including whitespace padding, etc.
          *
-         * This also includes non-numerical values (i.e. words on LCD like "Shrt", "OPEn").
+         * This also includes non-numerical values (i.e. words on LCD like
+         * "Shrt", "OPEn").
          *
          * @return String value that accurately representd Protek LCD.
          */
@@ -260,7 +269,8 @@ public final class Data
         /**
          * Gets the value as a Double if numerical, otherwise returns null.
          *
-         * @return a Double value if numerical, or null if not-numerical (i.e. words on LCD like "Shrt", "OPEn").
+         * @return a Double value if numerical, or null if not-numerical (i.e.
+         *         words on LCD like "Shrt", "OPEn").
          */
         public Double getValueDouble()
         {
@@ -290,7 +300,8 @@ public final class Data
         /**
          * Match a number with optional '-' and decimal.
          *
-         * Note: Will fail if non-latin (i.e. 0 to 9) digits used (for example, arabic digits).
+         * Note: Will fail if non-latin (i.e. 0 to 9) digits used (for example,
+         * arabic digits).
          *
          * @see http://stackoverflow.com/a/1102916
          *
@@ -309,9 +320,11 @@ public final class Data
 
 
     /**
-     * Flags are modes or options that the Protek 608 DMM can have enabled or disabled.
+     * Flags are modes or options that the Protek 608 DMM can have enabled or
+     * disabled.
      *
-     * These are usually displayed on the LCD, and the status of each is available as a boolean in this class.
+     * These are usually displayed on the LCD, and the status of each is
+     * available as a boolean in this class.
      */
     public class Flags
     {

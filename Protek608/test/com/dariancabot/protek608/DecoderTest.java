@@ -52,7 +52,6 @@ public class DecoderTest
 
 
     //-----------------------------------------------------------------------
-
     /**
      * Test of the EventListener method, of class Decoder.
      *
@@ -212,6 +211,8 @@ public class DecoderTest
         assertThat(data.subValue.getValueVerbatim(), equalTo("  10.50"));
         assertThat(data.subValue.getValueDouble(), equalTo(10.50));
 
+        assertThat(data.barGraph, equalTo(4));
+
         assertThat("audio flag", data.flags.audio, equalTo(false));
         assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
         assertThat("avg flag", data.flags.avg, equalTo(false));
@@ -272,6 +273,8 @@ public class DecoderTest
         assertThat(data.subValue.getValue(), equalTo("00.001"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 00.001"));
         assertThat(data.subValue.getValueDouble(), equalTo(0.001));
+
+        assertThat(data.barGraph, equalTo(0));
 
         assertThat("audio flag", data.flags.audio, equalTo(true));
         assertThat("autoOff flag", data.flags.autoOff, equalTo(false));
@@ -334,6 +337,8 @@ public class DecoderTest
         assertThat(data.subValue.getValueVerbatim(), equalTo(" Addr.8")); // mA
         assertThat(data.subValue.getValueDouble(), equalTo(null));
 
+        assertThat(data.barGraph, equalTo(22703));
+
         assertThat("audio flag", data.flags.audio, equalTo(false));
         assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
         assertThat("avg flag", data.flags.avg, equalTo(false));
@@ -395,6 +400,8 @@ public class DecoderTest
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 010.72")); // mA
         assertThat(data.subValue.getValueDouble(), equalTo(010.72));
 
+        assertThat(data.barGraph, equalTo(0)); // Minimum.
+
         assertThat("audio flag", data.flags.audio, equalTo(false));
         assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
         assertThat("avg flag", data.flags.avg, equalTo(false));
@@ -418,4 +425,70 @@ public class DecoderTest
         assertThat("rs232 flag", data.flags.rs232, equalTo(true));
         assertThat("store flag", data.flags.store, equalTo(false));
     }
+
+
+    //-----------------------------------------------------------------------
+    /**
+     * Test of decodeSerialData method, of class Decoder.
+     *
+     * Valid packet, testing for decode accuracy.
+     */
+    @Test
+    public void testDecodeSerialData8()
+    {
+        Data data = new Data();
+        Decoder decoder = new Decoder(data);
+
+        // Auto Off, RS232, .OL Mohm, full bar graph, 2.5 V
+        byte[] buffer =
+        {
+            0x5B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0F, 0x00, 0x00, 0x00, 0x00,
+            0x08, 0x0F, 0x05, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x0E, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+            0x01, 0x0F, 0x0F, 0x0F, 0x00, 0x02, 0x00, 0x06, 0x0B, 0x0B, 0x0D, 0x02, 0x5D
+        };
+
+        EventListener instance = new EventListenerImpl();
+        decoder.setEventListener(instance);
+
+        assertThat("Initialisation of test variable failed", lastEventData, equalTo(12));
+
+        decoder.decodeSerialData(buffer);
+
+        assertThat("Event failed to update test variable", lastEventData, equalTo(34));
+
+        assertThat(data.mainValue.getValue(), equalTo(".0L"));
+        assertThat(data.mainValue.getValueVerbatim(), equalTo("   .0L ")); // 22.6 V
+        assertThat(data.mainValue.getValueDouble(), equalTo(null));
+
+        assertThat(data.subValue.getValue(), equalTo("2.5"));
+        assertThat(data.subValue.getValueVerbatim(), equalTo("    2.5")); // mA
+        assertThat(data.subValue.getValueDouble(), equalTo(2.5));
+
+        //System.out.println("Bar graph: " + Integer.toBinaryString(data.barGraph));
+        assertThat(data.barGraph, equalTo(32767)); // Maximum.
+
+        assertThat("audio flag", data.flags.audio, equalTo(false));
+        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
+        assertThat("avg flag", data.flags.avg, equalTo(false));
+        assertThat("diode flag", data.flags.diode, equalTo(false));
+        assertThat("duty flag", data.flags.duty, equalTo(false));
+        assertThat("goNg flag", data.flags.goNg, equalTo(false));
+        assertThat("hold flag", data.flags.hold, equalTo(false));
+        assertThat("max flag", data.flags.max, equalTo(false));
+        assertThat("min flag", data.flags.min, equalTo(false));
+        assertThat("neg flag", data.flags.neg, equalTo(false));
+        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
+        assertThat("pos flag", data.flags.pos, equalTo(false));
+        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
+        assertThat("pulse flag", data.flags.pulse, equalTo(false));
+        assertThat("range flag", data.flags.range, equalTo(false));
+        assertThat("recall flag", data.flags.recall, equalTo(false));
+        assertThat("ref flag", data.flags.ref, equalTo(false));
+        assertThat("rel flag", data.flags.rel, equalTo(false));
+        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
+        assertThat("store flag", data.flags.store, equalTo(false));
+    }
+
 }
