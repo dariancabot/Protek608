@@ -14,23 +14,123 @@ public final class Data
     public Value mainValue = new Value();
     public Value subValue = new Value();
 
-    public Date lastUpdate = new Date();
-
     public Integer barGraph = null;
 
 
-    public class Value
+    public static class Value
     {
 
         private String value;
         private String valueVerbatim;
 
-        private String unit; // TODO: All main/sub units as struct thingy.
+        private Unit unit = new Unit();
 
         public Statistics statistics = new Statistics();
 
 
-        public class Statistics
+        public static class Unit
+        {
+            private int power = 0; // Value x 10^?
+            private Type type = Type.NONE;
+            private Measurement measurement = Measurement.NONE;
+            private Prefix prefix = Prefix.NONE;
+
+
+            public enum Type
+            {
+                NONE,
+                AC,
+                DC,
+                PW; // Pulse width.
+            }
+
+
+            public enum Measurement
+            {
+                NONE(null, null),
+                VOLT("V", "Volt"),
+                AMPERE("A", "Ampere"),
+                OHM("Ω", "Ohm"),
+                FARAD("F", "Farad"),
+                HERTZ("Hz", "Hertz"),
+                PERCENT("%", "Percent"),
+                DEG_C("°C", "Degrees Celcius"),
+                DEG_F("°F", "Degrees Fahrenheit"),
+                DEG_K("K", "Kelvin"),
+                DECIBEL("dBm", "Decibel-milliwatt"),
+                S1("S", "S"), // TODO: What is this unit?
+                S2("s", "s"); // TODO: What is this unit?
+
+                private final String abbreviation;
+                private final String name;
+
+
+                Measurement(String abbreviation, String name)
+                {
+                    this.abbreviation = abbreviation;
+                    this.name = name;
+                }
+
+
+                public String getAbbreviation()
+                {
+                    return this.abbreviation;
+                }
+
+
+                public String getName()
+                {
+                    return this.name;
+                }
+
+            }
+
+
+            public enum Prefix
+            {
+                NANO("n", "nano", -9),
+                MICRO("µ", "pico", -6),
+                MILLI("m", "milli", -3),
+                NONE(null, null, 0),
+                KILO("k", "kilo", 3),
+                MEGA("M", "mega", 6),
+                GIGA("G", "giga", 9);
+
+                private final String abbreviation;
+                private final String name;
+                private final int factor;
+
+
+                Prefix(String abbreviation, String name, int factor)
+                {
+                    this.abbreviation = abbreviation;
+                    this.name = name;
+                    this.factor = factor;
+                }
+
+
+                public String getAbbreviation()
+                {
+                    return this.abbreviation;
+                }
+
+
+                public String getName()
+                {
+                    return this.name;
+                }
+
+
+                public int getFactor()
+                {
+                    return this.factor;
+                }
+            }
+
+        }
+
+
+        public static class Statistics
         {
 
             private boolean isEnabled;
@@ -214,9 +314,6 @@ public final class Data
 //        }
 //        */
 
-            // Update the datetime.
-            lastUpdate = new Date();
-
             // Update the value.
             this.valueVerbatim = value;
             this.value = value.trim();
@@ -277,18 +374,6 @@ public final class Data
         }
 
 
-        public void setUnit(String unit)
-        {
-            this.unit = unit.trim();
-        }
-
-
-        public String getUnit()
-        {
-            return unit;
-        }
-
-
         /**
          * Match a number with optional '-' and decimal.
          *
@@ -334,6 +419,7 @@ public final class Data
         public boolean store;
         public boolean ref;
         public boolean negPercent;
+        public boolean lowBattery;
         public boolean range;
         public boolean hold;
         public boolean duty;

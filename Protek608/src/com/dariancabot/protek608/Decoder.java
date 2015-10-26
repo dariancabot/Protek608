@@ -171,9 +171,15 @@ public final class Decoder
             mainDigits = " " + mainDigits;
         }
 
-        // SET MAIN VALUE.
+        // Set main value.
         data.mainValue.setValue(mainDigits);
 
+        // Main value UNITs.
+        boolean mainUnitAc = (packet[5] & 0b01000000) == 0b01000000; // AC
+        boolean mainUnitDc = (packet[5] & 0b00010000) == 0b00010000; // DC
+        boolean mainUnitPw = (packet[4] & 0b00010000) == 0b00010000; // PW
+
+        //
         // Sub digits...
         int digit9Bits = (((packet[2] << 4) | (packet[2] >> 4)) & 0b11111110);
         int digit8Bits = (((packet[1] << 4) | (packet[1] >> 4)) & 0b11111110);
@@ -225,15 +231,43 @@ public final class Decoder
             subDigits = " " + subDigits;
         }
 
-        // SET SUB VALUE.
+        // Set sub value.
         data.subValue.setValue(subDigits);
+
+        /*
+         The Protek 608 unit support can be divided up by function...
+
+         Range / multiplier:
+         n, u, m, [none], k, M, G
+
+         Measurement units:
+         V, A, ohm, Hz, F, %, °C, °F, °K, dBm, S, s
+
+         Type:
+         AC, DC, PW
+
+         */
+        // Sub value UNIT.
+        boolean subUnitAc = ((packet[3] & 0b00000100) == 0b00000100); // AC
+        boolean subUnitDc = ((packet[3] & 0b00000001) == 0b00000001); // DC
+        boolean subUnitPct = ((packet[16] & 0b00001000) == 0b00001000); // %
+        boolean subUnitMil = ((packet[16] & 0b00000100) == 0b00000100); // m
+        boolean subUnitGig = ((packet[16] & 0b00000010) == 0b00000010); // G
+        boolean subUnitMeg = ((packet[16] & 0b00000001) == 0b00000001); // M
+        boolean subUnitDbm = ((packet[17] & 0b10000000) == 0b10000000); // dBm
+        boolean subUnitVlt = ((packet[17] & 0b01000000) == 0b01000000); // V
+        boolean subUnitOhm = ((packet[17] & 0b00100000) == 0b00100000); // ohm
+        boolean subUnitKil = ((packet[17] & 0b00010000) == 0b00010000); // k
+        boolean subUnitKlv = ((packet[17] & 0b00001000) == 0b00001000); // °K
+        boolean subUnitAmp = ((packet[17] & 0b00000100) == 0b00000100); // A
+        boolean subUnitHrz = ((packet[17] & 0b00000010) == 0b00000010); // Hz
 
         // Bar graph...
         Integer barGraph = null;
 
-        if ((packet[4] & 0b10000000) == 0b10000000)
+        if ((packet[4] & 0b10000000) == 0b10000000) // Bar graph '0' set.
         {
-            // Bar graph '0' set, i.e. bar graph displayed, so check everything...
+            // Bar graph displayed, so check all segments...
             barGraph = 0;
             barGraph += ((packet[4] & 0b01000000) >> 6); // B1.
             barGraph += ((packet[4] & 0b00001000) >> 2); // B2.
@@ -272,11 +306,15 @@ public final class Decoder
         data.flags.store = (packet[9] & 0b00000001) == 0b00000001;
         data.flags.ref = (packet[10] & 0b00000010) == 0b00000010;
         data.flags.negPercent = (packet[10] & 0b00000100) == 0b00000100;
+        data.flags.lowBattery = (packet[5] & 0b10000000) == 0b10000000;
+
+        // The following are refered to as sub (value) units in the manual,
+        // but they seem like global?
+        data.flags.diode = (packet[3] & 0b10000000) == 0b10000000;
         data.flags.range = (packet[3] & 0b01000000) == 0b01000000;
         data.flags.hold = (packet[3] & 0b00100000) == 0b00100000;
         data.flags.duty = (packet[3] & 0b00010000) == 0b00010000;
         data.flags.audio = (packet[3] & 0b00001000) == 0b00001000;
-        data.flags.diode = (packet[3] & 0b10000000) == 0b10000000;
 
         // Notify using the event listener if one is set.
         if (eventListener != null)
