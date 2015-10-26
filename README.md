@@ -3,11 +3,11 @@ A data aquisition Java library for the Protek 608 digital multimeter. [Visit the
 
 ## Current Release
 
-* [Pre-release v0.9.0-alpha](https://github.com/dariancabot/Protek608/releases/tag/v0.9.0-alpha)
+* [Pre-release v1.0-beta](https://github.com/dariancabot/Protek608/releases/tag/v1.0-beta) - Full protocol decoding.
 
 ## Planned Releases
 
-* Release v1.0.0 - Full protocol decoding.
+* Release v1.0.0 - Stable release after beta test period.
 * Release v1.1.0 - Enhanced data aquisition and statistics.
 
 ## Documentation
@@ -49,7 +49,8 @@ public class Events implements EventListener
   public void dataUpdateEvent()
   {
     Double measurement = MyNewApp.protek608.data.mainValue.getValueDouble();
-    System.out.println("Measurement = " + measurement);
+    String unit = MyNewApp.protek608.data.mainValue.unit.toString();
+    System.out.println("Measurement = " + measurement + " " + unit);
   }
 }
 ```
