@@ -24,8 +24,7 @@ public final class Protek608
 
 
     /**
-     * Defines the commands that can be sent to the Protek608 using the
-     * {@link #sendCommand(Command) sendCommand} method.
+     * Defines the commands that can be sent to the Protek608 using the {@link #sendCommand(Command) sendCommand} method.
      */
     public enum Commands
     {
@@ -78,7 +77,7 @@ public final class Protek608
             disconnectSerialPort();
         }
 
-        // TODO: For more com port details (jssc can only give name), see: http://stackoverflow.com/q/6362775
+        // For more com port details (jssc can only give name), see: http://stackoverflow.com/q/6362775
         portNames = jssc.SerialPortList.getPortNames();
     }
 
@@ -92,8 +91,7 @@ public final class Protek608
     /**
      * Send a command to the Protek 608 multimeter over the serial connection.
      *
-     * If not connected, there is no warning, the send command will fail
-     * silently.
+     * If not connected, there is no warning, the send command will fail silently.
      *
      * @param command
      */

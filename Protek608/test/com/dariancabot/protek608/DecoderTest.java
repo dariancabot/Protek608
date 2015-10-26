@@ -106,7 +106,7 @@ public class DecoderTest
      * Blank packet (zero) packet, should throw ProtocolException.
      */
     @Test
-    public void testDecodeSerialData1()
+    public void testDecodeSerialData01()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -130,7 +130,7 @@ public class DecoderTest
      * Invalid packet due to wrong start byte, should throw ProtocolException.
      */
     @Test
-    public void testDecodeSerialData2()
+    public void testDecodeSerialData02()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -156,7 +156,7 @@ public class DecoderTest
      * Invalid packet due to wrong end byte, should throw ProtocolException.
      */
     @Test
-    public void testDecodeSerialData3()
+    public void testDecodeSerialData03()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -182,7 +182,7 @@ public class DecoderTest
      * Valid packet, testing for decode accuracy.
      */
     @Test
-    public void testDecodeSerialData4()
+    public void testDecodeSerialData04()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -206,7 +206,7 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("0.0015"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo(" 0.0015"));
         assertThat(data.mainValue.getValueDouble(), equalTo(0.0015));
-        assertThat(data.mainValue.unit.toString(), equalTo("???"));
+        assertThat(data.mainValue.unit.toString(), equalTo("V DC"));
 
         assertThat(data.subValue.getValue(), equalTo("10.50"));
         assertThat(data.subValue.getValueVerbatim(), equalTo("  10.50"));
@@ -247,7 +247,7 @@ public class DecoderTest
      * Valid packet, testing for decode accuracy.
      */
     @Test
-    public void testDecodeSerialData5()
+    public void testDecodeSerialData05()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -272,7 +272,7 @@ public class DecoderTest
         assertThat(data.mainValue.getValueVerbatim(), equalTo("  5hrt"));
         assertThat(data.mainValue.getValueDouble(), equalTo(null));
         assertThat(data.mainValue.unit.toString(), equalTo(null));
-        assertThat(data.mainValue.unit.toString(), equalTo("???"));
+        assertThat(data.mainValue.unit.toString(), equalTo(null));
 
         assertThat(data.subValue.getValue(), equalTo("00.001"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 00.001"));
@@ -313,7 +313,7 @@ public class DecoderTest
      * Valid packet, testing for decode accuracy.
      */
     @Test
-    public void testDecodeSerialData6()
+    public void testDecodeSerialData06()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -337,7 +337,7 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("22.705"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo(" 22.705")); // 22.6 V
         assertThat(data.mainValue.getValueDouble(), equalTo(22.705));
-        assertThat(data.mainValue.unit.toString(), equalTo("???"));
+        assertThat(data.mainValue.unit.toString(), equalTo("V"));
 
         assertThat(data.subValue.getValue(), equalTo("Addr.8"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" Addr.8")); // mA
@@ -378,7 +378,7 @@ public class DecoderTest
      * Valid packet, testing for decode accuracy.
      */
     @Test
-    public void testDecodeSerialData7()
+    public void testDecodeSerialData07()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -402,7 +402,7 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("00.00"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo("  00.00"));
         assertThat(data.mainValue.getValueDouble(), equalTo(0.0));
-        assertThat(data.mainValue.unit.toString(), equalTo("???"));
+        assertThat(data.mainValue.unit.toString(), equalTo("Hz"));
 
         assertThat(data.subValue.getValue(), equalTo("010.72"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 010.72"));
@@ -443,7 +443,7 @@ public class DecoderTest
      * Valid packet, testing for decode accuracy.
      */
     @Test
-    public void testDecodeSerialData8()
+    public void testDecodeSerialData08()
     {
         Data data = new Data();
         Decoder decoder = new Decoder(data);
@@ -468,7 +468,7 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo(".0L"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo("   .0L "));
         assertThat(data.mainValue.getValueDouble(), equalTo(null));
-        assertThat(data.mainValue.unit.toString(), equalTo("???"));
+        assertThat(data.mainValue.unit.toString(), equalTo("MΩ"));
 
         assertThat(data.subValue.getValue(), equalTo("2.5"));
         assertThat(data.subValue.getValueVerbatim(), equalTo("    2.5"));
@@ -502,4 +502,137 @@ public class DecoderTest
         assertThat("store flag", data.flags.store, equalTo(false));
     }
 
+
+    //-----------------------------------------------------------------------
+    /**
+     * Test of decodeSerialData method, of class Decoder.
+     *
+     * Valid packet, testing for correct unit 'S' (second, not siemens).
+     */
+    @Test
+    public void testDecodeSerialData09()
+    {
+        Data data = new Data();
+        Decoder decoder = new Decoder(data);
+
+        // Main: 000.00 mS PW, Sub: 100.0 %, Bar graph: 0, Flags: Auto off, Rs232, Pulse, +, Duty.
+        byte[] buffer =
+        {
+            0x5B, 0x05, 0x0F, 0x05, 0x00, 0x00, 0x00, 0x08, 0x00, 0x09, 0x00, 0x00, 0x0F, 0x05, 0x0F,
+            0x05, 0x0F, 0x0D, 0x02, 0x0D, 0x00, 0x00, 0x00, 0x0F, 0x05, 0x0F, 0x05, 0x00, 0x00, 0x04,
+            0x04, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x05, 0x0F, 0x0D, 0x0F, 0x04, 0x5D
+        };
+
+        EventListener instance = new EventListenerImpl();
+        decoder.setEventListener(instance);
+
+        assertThat("Initialisation of test variable failed", lastEventData, equalTo(12));
+
+        decoder.decodeSerialData(buffer);
+
+        assertThat("Event failed to update test variable", lastEventData, equalTo(34));
+
+        assertThat(data.mainValue.getValue(), equalTo("000.00"));
+        assertThat(data.mainValue.getValueVerbatim(), equalTo(" 000.00"));
+        assertThat(data.mainValue.getValueDouble(), equalTo(0.0));
+        assertThat(data.mainValue.unit.toString(), equalTo("mS PW"));
+        assertThat(data.mainValue.unit.getMeasurement().getName(), equalTo("Second"));
+
+        assertThat(data.subValue.getValue(), equalTo("100.0"));
+        assertThat(data.subValue.getValueVerbatim(), equalTo("  100.0"));
+        assertThat(data.subValue.getValueDouble(), equalTo(100.0));
+        assertThat(data.subValue.unit.toString(), equalTo("%"));
+
+        assertThat(data.barGraph, equalTo(0));
+
+        assertThat("audio flag", data.flags.audio, equalTo(false));
+        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
+        assertThat("avg flag", data.flags.avg, equalTo(false));
+        assertThat("diode flag", data.flags.diode, equalTo(false));
+        assertThat("duty flag", data.flags.duty, equalTo(true));
+        assertThat("goNg flag", data.flags.goNg, equalTo(false));
+        assertThat("hold flag", data.flags.hold, equalTo(false));
+        assertThat("max flag", data.flags.max, equalTo(false));
+        assertThat("min flag", data.flags.min, equalTo(false));
+        assertThat("neg flag", data.flags.neg, equalTo(false));
+        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
+        assertThat("pos flag", data.flags.pos, equalTo(true));
+        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
+        assertThat("pulse flag", data.flags.pulse, equalTo(true));
+        assertThat("range flag", data.flags.range, equalTo(false));
+        assertThat("recall flag", data.flags.recall, equalTo(false));
+        assertThat("ref flag", data.flags.ref, equalTo(false));
+        assertThat("rel flag", data.flags.rel, equalTo(false));
+        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
+        assertThat("store flag", data.flags.store, equalTo(false));
+    }
+
+
+    //-----------------------------------------------------------------------
+    /**
+     * Test of decodeSerialData method, of class Decoder.
+     *
+     * Valid packet, testing for correct unit 'S' (siemens, not second).
+     */
+    @Test
+    public void testDecodeSerialData10()
+    {
+        Data data = new Data();
+        Decoder decoder = new Decoder(data);
+
+        // Main: 000.0 nS, Sub: .0L GΩ, Bar graph: 0, Flags: Auto off, Rs232.
+        byte[] buffer =
+        {
+            0x5B, 0x05, 0x0F, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x05, 0x0F, 0x05, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x0F, 0x0D, 0x0F, 0x05, 0x00, 0x00, 0x04,
+            0x08, 0x00, 0x00, 0x00, 0x04, 0x04, 0x00, 0x00, 0x00, 0x00, 0x0E, 0x03, 0x5D
+        };
+
+        EventListener instance = new EventListenerImpl();
+        decoder.setEventListener(instance);
+
+        assertThat("Initialisation of test variable failed", lastEventData, equalTo(12));
+
+        decoder.decodeSerialData(buffer);
+
+        assertThat("Event failed to update test variable", lastEventData, equalTo(34));
+
+        assertThat(data.mainValue.getValue(), equalTo("000.0"));
+        assertThat(data.mainValue.getValueVerbatim(), equalTo("  000.0"));
+        assertThat(data.mainValue.getValueDouble(), equalTo(0.0));
+        assertThat(data.mainValue.unit.toString(), equalTo("nS"));
+        assertThat(data.mainValue.unit.getMeasurement().getName(), equalTo("Siemens"));
+
+        assertThat(data.subValue.getValue(), equalTo(".0L"));
+        assertThat(data.subValue.getValueVerbatim(), equalTo("   .0L "));
+        assertThat(data.subValue.getValueDouble(), equalTo(null));
+        assertThat(data.subValue.unit.toString(), equalTo("GΩ"));
+
+        assertThat(data.barGraph, equalTo(0));
+
+        assertThat("audio flag", data.flags.audio, equalTo(false));
+        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
+        assertThat("avg flag", data.flags.avg, equalTo(false));
+        assertThat("diode flag", data.flags.diode, equalTo(false));
+        assertThat("duty flag", data.flags.duty, equalTo(false));
+        assertThat("goNg flag", data.flags.goNg, equalTo(false));
+        assertThat("hold flag", data.flags.hold, equalTo(false));
+        assertThat("max flag", data.flags.max, equalTo(false));
+        assertThat("min flag", data.flags.min, equalTo(false));
+        assertThat("neg flag", data.flags.neg, equalTo(false));
+        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
+        assertThat("pos flag", data.flags.pos, equalTo(false));
+        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
+        assertThat("pulse flag", data.flags.pulse, equalTo(false));
+        assertThat("range flag", data.flags.range, equalTo(false));
+        assertThat("recall flag", data.flags.recall, equalTo(false));
+        assertThat("ref flag", data.flags.ref, equalTo(false));
+        assertThat("rel flag", data.flags.rel, equalTo(false));
+        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
+        assertThat("store flag", data.flags.store, equalTo(false));
+    }
 }

@@ -70,13 +70,6 @@ public final class Decoder
             }
             else if (buffer[i] == 0x5d) // End of packet.
             {
-//                for (int j = 0; j < 20; j ++) // Only bytes 0 to 19 are applicable.
-//                {
-//                    String s1 = String.format("%2s", j);
-//                    String s2 = String.format("%8s", Integer.toBinaryString(packet[j])).replace(' ', '0');
-//                    System.out.println("  " + s1 + "  " + s2 + " (" + packet[j] + ")");
-//                }
-
                 decodePacket();
             }
             else
@@ -88,7 +81,6 @@ public final class Decoder
 
                 // Only the last 4-bits/nibble is used for each 8-bit byte.
                 // Discard and rebuild a more concise packet to work with.
-                // TODO: Use byte instead of int? i.e. "idata >> 4".
                 idata = idata >> 28;
                 int mask = 0b1111;
                 idata = idata & mask;
@@ -175,66 +167,91 @@ public final class Decoder
         data.mainValue.setValue(mainDigits);
 
         // Main value unit prefix.
-        // TODO: Complete main unit prefix.
         data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.NONE);
 
-        if ((packet[16] & 0b00000100) == 0b00000100) // m
+        if ((packet[14] & 0b10000000) == 0b10000000) // k
         {
-
+            data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.KILO);
         }
 
-        if ((packet[16] & 0b00000010) == 0b00000010) // G
+        if ((packet[14] & 0b00001000) == 0b00001000) // M
         {
-
+            data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MEGA);
         }
 
-        if ((packet[16] & 0b00000001) == 0b00000001) // M
+        if ((packet[14] & 0b00000100) == 0b00000100) // u
         {
-
+            data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MICRO);
         }
 
-        if ((packet[17] & 0b00010000) == 0b00010000) // k
+        if ((packet[14] & 0b00000010) == 0b00000010) // m
         {
+            data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MILLI);
+        }
 
+        if ((packet[14] & 0b00000001) == 0b00000001) // n
+        {
+            data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.NANO);
         }
 
         // Main value unit measurement.
-        // TODO: Complete main unit measurement.
         data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.NONE);
 
-        if ((packet[16] & 0b00001000) == 0b00001000) // %
+        if ((packet[13] & 0b01000000) == 0b01000000) // Hz
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.HERTZ);
         }
 
-        if ((packet[17] & 0b10000000) == 0b10000000) // dBm
+        if ((packet[13] & 0b00100000) == 0b00100000) // °F
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.DEG_F);
         }
 
-        if ((packet[17] & 0b01000000) == 0b01000000) // V
+        if ((packet[13] & 0b00010000) == 0b00010000) // s
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.S);
         }
 
-        if ((packet[17] & 0b00100000) == 0b00100000) // ohm
+        if ((packet[13] & 0b00000100) == 0b00000100) // ohm
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.OHM);
         }
 
-        if ((packet[17] & 0b00001000) == 0b00001000) // °K
+        if ((packet[13] & 0b00000010) == 0b00000010) // A
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.AMPERE);
         }
 
-        if ((packet[17] & 0b00000100) == 0b00000100) // A
+        if ((packet[13] & 0b00000001) == 0b00000001) // F
         {
-
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.FARAD);
         }
 
-        if ((packet[17] & 0b00000010) == 0b00000010) // Hz
+        if ((packet[14] & 0b01000000) == 0b01000000) // V
         {
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.VOLT);
+        }
 
+        if ((packet[14] & 0b00100000) == 0b00100000) // S
+        {
+            // There are two units that use the same 'S' symbol on the display.
+            // Determine the correct one by checking for pulse width (seconds).
+
+            if ((packet[4] & 0b00010000) == 0b00010000) // PW
+            {
+                // Pulse width, so in this case 'S' means SECOND.
+                data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.SECOND);
+            }
+            else
+            {
+                // ... otherwise, 'S' means SIEMENS.
+                data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.SIEMENS);
+            }
+        }
+
+        if ((packet[14] & 0b00010000) == 0b00010000) // °C
+        {
+            data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.DEG_C);
         }
 
         // Main value unit type.
@@ -247,7 +264,7 @@ public final class Decoder
 
         if ((packet[5] & 0b00010000) == 0b00010000) // DC
         {
-            data.mainValue.unit.setType(Data.Value.Unit.Type.AC);
+            data.mainValue.unit.setType(Data.Value.Unit.Type.DC);
         }
 
         if ((packet[4] & 0b00010000) == 0b00010000) // PW

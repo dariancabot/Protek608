@@ -69,9 +69,7 @@ public final class Communications implements SerialPortEventListener
 
     //-----------------------------------------------------------------------
     /**
-     * Implementation of the serialEvent method to see events that happened to
-     * the port. This only report those events that are set in the SerialPort
-     * mask.
+     * Implementation of the serialEvent method to see events that happened to the port. This only report those events that are set in the SerialPort mask.
      *
      * @param event the new SerialPort
      */

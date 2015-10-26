@@ -1,6 +1,5 @@
 package com.dariancabot.protek608;
 
-import java.util.Date;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.After;
@@ -71,15 +70,17 @@ public class DataTest
         // Test toString() methods
         assertThat(data.mainValue.toString(), equalTo("-123.456"));
         assertThat(data.mainValue.toString(false), equalTo("-123.456"));
-//        assertThat(data.mainValue.toString(true), equalTo("-123.456"));
+        assertThat(data.mainValue.toString(true), equalTo("-123.456"));
 
         // Test unit
-//        data.mainValue.setUnit(" mV ");
-//        assertThat(data.mainValue.getUnit(), equalTo("mV"));
+        data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MILLI);
+        data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.VOLT);
+        assertThat(data.mainValue.unit.toString(), equalTo("mV"));
+
         // Test toString() methods
         assertThat(data.mainValue.toString(), equalTo("-123.456"));
         assertThat(data.mainValue.toString(false), equalTo("-123.456"));
-//        assertThat(data.mainValue.toString(true), equalTo("-123.456 mV"));
+        assertThat(data.mainValue.toString(true), equalTo("-123.456 mV"));
 
     }
 
@@ -87,8 +88,6 @@ public class DataTest
     @Test
     public void testStatistics()
     {
-        // TODO: Test time duration.
-
         Data data = new Data();
 
         // Statistics not enabled yet, check null/default...

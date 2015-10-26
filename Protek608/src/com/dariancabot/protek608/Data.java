@@ -121,8 +121,9 @@ public final class Data
                 DEG_F("°F", "Degrees Fahrenheit"),
                 KELVIN("K", "Kelvin"),
                 DECIBEL_MW("dBm", "Decibel-milliwatt"),
-                S1("S", "S"), // TODO: What is this unit?
-                S2("s", "s"); // TODO: What is this unit?
+                SIEMENS("S", "Siemens"),
+                SECOND("S", "Second"),
+                S("s", "s"); // TODO: What is this unit? (Ref 108 from manual page 44).
 
                 private final String abbreviation;
                 private final String name;
@@ -375,9 +376,9 @@ public final class Data
         {
             String valueStr = value;
 
-            if ((includeUnit) && (unit != null))
+            if ((includeUnit) && (unit.toString() != null))
             {
-                valueStr += " " + unit;
+                valueStr += " " + unit.toString();
             }
 
             return valueStr;
@@ -386,30 +387,6 @@ public final class Data
 
         public void setValue(String value)
         {
-//        // This might be useful for detecting special values/modes
-//        /*
-//        try
-//        {
-//            Double subValue = Double.parseDouble(subDigits);
-//            //System.out.println("Sub value:     [ " + subDigits + " ]    " + subValue.toString());
-//        }
-//        catch (NumberFormatException nfe)
-//        {
-//            if (subDigits.contains("0L") || subDigits.contains("0.L")) // Just 'L' good enough?
-//            {
-//                //System.out.println("Sub value:     [ " + subDigits + " ]    OL");
-//            }
-//            else if (subDigits.contains("0PEn"))
-//            {
-//                //System.out.println("Sub value:     [ " + subDigits + " ]    OPEN");
-//            }
-//            else
-//            {
-//                //System.out.println("Sub value:     [ " + subDigits + " ]    ?");
-//            }
-//        }
-//        */
-
             // Update the value.
             this.valueVerbatim = value;
             this.value = value.trim();
