@@ -29,8 +29,7 @@ public final class Decoder
 
     //-----------------------------------------------------------------------
     /**
-     * Decodes a Protek 608 packet, updates the Data object, and notifyies when
-     * complete using the EventListener.
+     * Decodes a Protek 608 packet, updates the Data object, and notifyies when complete using the EventListener.
      *
      * @param buffer The packet as a byte array. Must be 43 bytes long.
      *
@@ -115,8 +114,7 @@ public final class Decoder
 
     //-----------------------------------------------------------------------
     /**
-     * Decodes a complete serial packet from the Protek 608 DMM. The decoded
-     * data will populate the provided Data object.
+     * Decodes a complete serial packet from the Protek 608 DMM. The decoded data will populate the provided Data object.
      */
     private void decodePacket()
     {
@@ -231,83 +229,27 @@ public final class Decoder
         data.subValue.setValue(subDigits);
 
         // Bar graph...
-        int barGraph = 0;
+        Integer barGraph = null;
 
-        // Bar 0
-        //boolean bar0 = (packet[4] & 0b10000000) == 0b10000000;
-        if ((packet[4] & 0b01000000) == 0b01000000)
+        if ((packet[4] & 0b10000000) == 0b10000000)
         {
-            barGraph += 1;
-        }
-
-        if ((packet[4] & 0b00001000) == 0b00001000)
-        {
-            barGraph += 2;
-        }
-
-        if ((packet[4] & 0b00000100) == 0b00000100)
-        {
-            barGraph += 4;
-        }
-
-        if ((packet[4] & 0b00000010) == 0b00000010)
-        {
-            barGraph += 8;
-        }
-
-        if ((packet[4] & 0b00000001) == 0b00000001)
-        {
-            barGraph += 16;
-        }
-
-        if ((packet[16] & 0b00010000) == 0b00010000)
-        {
-            barGraph += 32;
-        }
-
-        if ((packet[16] & 0b00100000) == 0b00100000)
-        {
-            barGraph += 64;
-        }
-
-        if ((packet[16] & 0b01000000) == 0b01000000)
-        {
-            barGraph += 128;
-        }
-
-        if ((packet[16] & 0b10000000) == 0b10000000)
-        {
-            barGraph += 256;
-        }
-
-        if ((packet[15] & 0b00001000) == 0b00001000)
-        {
-            barGraph += 512;
-        }
-
-        if ((packet[15] & 0b00000100) == 0b00000100)
-        {
-            barGraph += 1024;
-        }
-
-        if ((packet[15] & 0b00000010) == 0b00000010)
-        {
-            barGraph += 2048;
-        }
-
-        if ((packet[15] & 0b00000001) == 0b00000001)
-        {
-            barGraph += 4096;
-        }
-
-        if ((packet[15] & 0b00010000) == 0b00010000)
-        {
-            barGraph += 8192;
-        }
-
-        if ((packet[15] & 0b00100000) == 0b00100000)
-        {
-            barGraph += 16384;
+            // Bar graph '0' set, i.e. bar graph displayed, so check everything...
+            barGraph = 0;
+            barGraph += ((packet[4] & 0b01000000) >> 6); // B1.
+            barGraph += ((packet[4] & 0b00001000) >> 2); // B2.
+            barGraph += (packet[4] & 0b00000100); // B4.
+            barGraph += ((packet[4] & 0b00000010) << 2); // B8.
+            barGraph += ((packet[4] & 0b00000001) << 4); // B16.
+            barGraph += ((packet[16] & 0b00010000) << 1); // B32.
+            barGraph += ((packet[16] & 0b00100000) << 1); // B64.
+            barGraph += ((packet[16] & 0b01000000) << 1); // B128.
+            barGraph += ((packet[16] & 0b10000000) << 1); // B256.
+            barGraph += ((packet[15] & 0b00001000) << 6); // B512.
+            barGraph += ((packet[15] & 0b00000100) << 8); // B1K.
+            barGraph += ((packet[15] & 0b00000010) << 10); // B2K.
+            barGraph += ((packet[15] & 0b00000001) << 12); // B4K.
+            barGraph += ((packet[15] & 0b00010000) << 9); // B8K.
+            barGraph += ((packet[15] & 0b00100000) << 9); // B16K.
         }
 
         data.barGraph = barGraph;
@@ -350,8 +292,7 @@ public final class Decoder
      *
      * @param encoded the value of the digit (8-bit value).
      *
-     * @return A String representation of the digit value, either numerical or
-     *         otherwise.
+     * @return A String representation of the digit value, either numerical or otherwise.
      */
     private String decodeDigit(int encoded)
     {

@@ -274,7 +274,7 @@ public class DecoderTest
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 00.001"));
         assertThat(data.subValue.getValueDouble(), equalTo(0.001));
 
-        assertThat(data.barGraph, equalTo(0));
+        assertThat(data.barGraph, equalTo(null)); // Bar graph not shown.
 
         assertThat("audio flag", data.flags.audio, equalTo(true));
         assertThat("autoOff flag", data.flags.autoOff, equalTo(false));
