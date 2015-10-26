@@ -23,25 +23,88 @@ public final class Data
         private String value;
         private String valueVerbatim;
 
-        private Unit unit = new Unit();
+        public Unit unit = new Unit();
 
         public Statistics statistics = new Statistics();
 
 
         public static class Unit
         {
-            private int power = 0; // Value x 10^?
             private Type type = Type.NONE;
-            private Measurement measurement = Measurement.NONE;
             private Prefix prefix = Prefix.NONE;
+            private Measurement measurement = Measurement.NONE;
 
 
             public enum Type
             {
-                NONE,
-                AC,
-                DC,
-                PW; // Pulse width.
+                NONE(null, null),
+                AC("AC", "Alternating Current"),
+                DC("DC", "Direct Current"),
+                PW("PW", "Pulse Width");
+
+                private final String abbreviation;
+                private final String name;
+
+
+                Type(String abbreviation, String name)
+                {
+                    this.abbreviation = abbreviation;
+                    this.name = name;
+                }
+
+
+                public String getAbbreviation()
+                {
+                    return this.abbreviation;
+                }
+
+
+                public String getName()
+                {
+                    return this.name;
+                }
+            }
+
+
+            public enum Prefix
+            {
+                NONE(null, null, 0),
+                NANO("n", "nano", -9),
+                MICRO("µ", "pico", -6),
+                MILLI("m", "milli", -3),
+                KILO("k", "kilo", 3),
+                MEGA("M", "mega", 6),
+                GIGA("G", "giga", 9);
+
+                private final String abbreviation;
+                private final String name;
+                private final int factor; // Value x 10^?
+
+
+                Prefix(String abbreviation, String name, int factor)
+                {
+                    this.abbreviation = abbreviation;
+                    this.name = name;
+                    this.factor = factor;
+                }
+
+
+                public String getAbbreviation()
+                {
+                    return this.abbreviation;
+                }
+
+
+                public String getName()
+                {
+                    return this.name;
+                }
+
+
+                public int getFactor()
+                {
+                    return this.factor;
+                }
             }
 
 
@@ -56,8 +119,8 @@ public final class Data
                 PERCENT("%", "Percent"),
                 DEG_C("°C", "Degrees Celcius"),
                 DEG_F("°F", "Degrees Fahrenheit"),
-                DEG_K("K", "Kelvin"),
-                DECIBEL("dBm", "Decibel-milliwatt"),
+                KELVIN("K", "Kelvin"),
+                DECIBEL_MW("dBm", "Decibel-milliwatt"),
                 S1("S", "S"), // TODO: What is this unit?
                 S2("s", "s"); // TODO: What is this unit?
 
@@ -86,45 +149,78 @@ public final class Data
             }
 
 
-            public enum Prefix
+            public Type getType()
             {
-                NANO("n", "nano", -9),
-                MICRO("µ", "pico", -6),
-                MILLI("m", "milli", -3),
-                NONE(null, null, 0),
-                KILO("k", "kilo", 3),
-                MEGA("M", "mega", 6),
-                GIGA("G", "giga", 9);
-
-                private final String abbreviation;
-                private final String name;
-                private final int factor;
+                return type;
+            }
 
 
-                Prefix(String abbreviation, String name, int factor)
+            public void setType(Type type)
+            {
+                this.type = type;
+            }
+
+
+            public Prefix getPrefix()
+            {
+                return prefix;
+            }
+
+
+            public void setPrefix(Prefix prefix)
+            {
+                this.prefix = prefix;
+            }
+
+
+            public Measurement getMeasurement()
+            {
+                return measurement;
+            }
+
+
+            public void setMeasurement(Measurement measurement)
+            {
+                this.measurement = measurement;
+            }
+
+
+            /**
+             * Gets a String representation of the unit in a concise, readable format.
+             *
+             * <p>
+             * Format: [prefix][measurement] [type]
+             *
+             * @return A representaiton of the unit.
+             */
+            @Override
+            public String toString()
+            {
+                String unit = "";
+
+                if (this.prefix.getAbbreviation() != null)
                 {
-                    this.abbreviation = abbreviation;
-                    this.name = name;
-                    this.factor = factor;
+                    unit += this.prefix.getAbbreviation();
                 }
 
-
-                public String getAbbreviation()
+                if (this.measurement.getAbbreviation() != null)
                 {
-                    return this.abbreviation;
+                    unit += this.measurement.getAbbreviation();
                 }
 
-
-                public String getName()
+                if (this.type.getAbbreviation() != null)
                 {
-                    return this.name;
+                    unit += " " + this.type.getAbbreviation();
                 }
 
+                unit = unit.trim();
 
-                public int getFactor()
+                if (unit.isEmpty())
                 {
-                    return this.factor;
+                    unit = null;
                 }
+
+                return unit;
             }
 
         }

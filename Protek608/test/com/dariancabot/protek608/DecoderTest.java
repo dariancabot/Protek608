@@ -206,10 +206,12 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("0.0015"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo(" 0.0015"));
         assertThat(data.mainValue.getValueDouble(), equalTo(0.0015));
+        assertThat(data.mainValue.unit.toString(), equalTo("???"));
 
         assertThat(data.subValue.getValue(), equalTo("10.50"));
         assertThat(data.subValue.getValueVerbatim(), equalTo("  10.50"));
         assertThat(data.subValue.getValueDouble(), equalTo(10.50));
+        assertThat(data.subValue.unit.toString(), equalTo("MΩ"));
 
         assertThat(data.barGraph, equalTo(4));
 
@@ -269,10 +271,13 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("5hrt"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo("  5hrt"));
         assertThat(data.mainValue.getValueDouble(), equalTo(null));
+        assertThat(data.mainValue.unit.toString(), equalTo(null));
+        assertThat(data.mainValue.unit.toString(), equalTo("???"));
 
         assertThat(data.subValue.getValue(), equalTo("00.001"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" 00.001"));
         assertThat(data.subValue.getValueDouble(), equalTo(0.001));
+        assertThat(data.subValue.unit.toString(), equalTo("kΩ"));
 
         assertThat(data.barGraph, equalTo(null)); // Bar graph not shown.
 
@@ -332,10 +337,12 @@ public class DecoderTest
         assertThat(data.mainValue.getValue(), equalTo("22.705"));
         assertThat(data.mainValue.getValueVerbatim(), equalTo(" 22.705")); // 22.6 V
         assertThat(data.mainValue.getValueDouble(), equalTo(22.705));
+        assertThat(data.mainValue.unit.toString(), equalTo("???"));
 
         assertThat(data.subValue.getValue(), equalTo("Addr.8"));
         assertThat(data.subValue.getValueVerbatim(), equalTo(" Addr.8")); // mA
         assertThat(data.subValue.getValueDouble(), equalTo(null));
+        assertThat(data.subValue.unit.toString(), equalTo("mA"));
 
         assertThat(data.barGraph, equalTo(22703));
 
@@ -393,12 +400,14 @@ public class DecoderTest
         assertThat("Event failed to update test variable", lastEventData, equalTo(34));
 
         assertThat(data.mainValue.getValue(), equalTo("00.00"));
-        assertThat(data.mainValue.getValueVerbatim(), equalTo("  00.00")); // 22.6 V
+        assertThat(data.mainValue.getValueVerbatim(), equalTo("  00.00"));
         assertThat(data.mainValue.getValueDouble(), equalTo(0.0));
+        assertThat(data.mainValue.unit.toString(), equalTo("???"));
 
         assertThat(data.subValue.getValue(), equalTo("010.72"));
-        assertThat(data.subValue.getValueVerbatim(), equalTo(" 010.72")); // mA
+        assertThat(data.subValue.getValueVerbatim(), equalTo(" 010.72"));
         assertThat(data.subValue.getValueDouble(), equalTo(010.72));
+        assertThat(data.subValue.unit.toString(), equalTo("V AC"));
 
         assertThat(data.barGraph, equalTo(0)); // Minimum.
 
@@ -457,12 +466,14 @@ public class DecoderTest
         assertThat("Event failed to update test variable", lastEventData, equalTo(34));
 
         assertThat(data.mainValue.getValue(), equalTo(".0L"));
-        assertThat(data.mainValue.getValueVerbatim(), equalTo("   .0L ")); // 22.6 V
+        assertThat(data.mainValue.getValueVerbatim(), equalTo("   .0L "));
         assertThat(data.mainValue.getValueDouble(), equalTo(null));
+        assertThat(data.mainValue.unit.toString(), equalTo("???"));
 
         assertThat(data.subValue.getValue(), equalTo("2.5"));
-        assertThat(data.subValue.getValueVerbatim(), equalTo("    2.5")); // mA
+        assertThat(data.subValue.getValueVerbatim(), equalTo("    2.5"));
         assertThat(data.subValue.getValueDouble(), equalTo(2.5));
+        assertThat(data.subValue.unit.toString(), equalTo("V"));
 
         //System.out.println("Bar graph: " + Integer.toBinaryString(data.barGraph));
         assertThat(data.barGraph, equalTo(32767)); // Maximum.

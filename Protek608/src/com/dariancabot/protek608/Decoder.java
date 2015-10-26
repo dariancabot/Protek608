@@ -174,12 +174,87 @@ public final class Decoder
         // Set main value.
         data.mainValue.setValue(mainDigits);
 
-        // Main value UNITs.
-        boolean mainUnitAc = (packet[5] & 0b01000000) == 0b01000000; // AC
-        boolean mainUnitDc = (packet[5] & 0b00010000) == 0b00010000; // DC
-        boolean mainUnitPw = (packet[4] & 0b00010000) == 0b00010000; // PW
+        // Main value unit prefix.
+        // TODO: Complete main unit prefix.
+        data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.NONE);
 
-        //
+        if ((packet[16] & 0b00000100) == 0b00000100) // m
+        {
+
+        }
+
+        if ((packet[16] & 0b00000010) == 0b00000010) // G
+        {
+
+        }
+
+        if ((packet[16] & 0b00000001) == 0b00000001) // M
+        {
+
+        }
+
+        if ((packet[17] & 0b00010000) == 0b00010000) // k
+        {
+
+        }
+
+        // Main value unit measurement.
+        // TODO: Complete main unit measurement.
+        data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.NONE);
+
+        if ((packet[16] & 0b00001000) == 0b00001000) // %
+        {
+
+        }
+
+        if ((packet[17] & 0b10000000) == 0b10000000) // dBm
+        {
+
+        }
+
+        if ((packet[17] & 0b01000000) == 0b01000000) // V
+        {
+
+        }
+
+        if ((packet[17] & 0b00100000) == 0b00100000) // ohm
+        {
+
+        }
+
+        if ((packet[17] & 0b00001000) == 0b00001000) // °K
+        {
+
+        }
+
+        if ((packet[17] & 0b00000100) == 0b00000100) // A
+        {
+
+        }
+
+        if ((packet[17] & 0b00000010) == 0b00000010) // Hz
+        {
+
+        }
+
+        // Main value unit type.
+        data.mainValue.unit.setType(Data.Value.Unit.Type.NONE); // Clear.
+
+        if ((packet[5] & 0b01000000) == 0b01000000) // AC
+        {
+            data.mainValue.unit.setType(Data.Value.Unit.Type.AC);
+        }
+
+        if ((packet[5] & 0b00010000) == 0b00010000) // DC
+        {
+            data.mainValue.unit.setType(Data.Value.Unit.Type.AC);
+        }
+
+        if ((packet[4] & 0b00010000) == 0b00010000) // PW
+        {
+            data.mainValue.unit.setType(Data.Value.Unit.Type.PW);
+        }
+
         // Sub digits...
         int digit9Bits = (((packet[2] << 4) | (packet[2] >> 4)) & 0b11111110);
         int digit8Bits = (((packet[1] << 4) | (packet[1] >> 4)) & 0b11111110);
@@ -234,33 +309,79 @@ public final class Decoder
         // Set sub value.
         data.subValue.setValue(subDigits);
 
-        /*
-         The Protek 608 unit support can be divided up by function...
+        // Sub value unit prefix.
+        data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.NONE);
 
-         Range / multiplier:
-         n, u, m, [none], k, M, G
+        if ((packet[16] & 0b00000100) == 0b00000100) // m
+        {
+            data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.MILLI);
+        }
 
-         Measurement units:
-         V, A, ohm, Hz, F, %, °C, °F, °K, dBm, S, s
+        if ((packet[16] & 0b00000010) == 0b00000010) // G
+        {
+            data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.GIGA);
+        }
 
-         Type:
-         AC, DC, PW
+        if ((packet[16] & 0b00000001) == 0b00000001) // M
+        {
+            data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.MEGA);
+        }
 
-         */
-        // Sub value UNIT.
-        boolean subUnitAc = ((packet[3] & 0b00000100) == 0b00000100); // AC
-        boolean subUnitDc = ((packet[3] & 0b00000001) == 0b00000001); // DC
-        boolean subUnitPct = ((packet[16] & 0b00001000) == 0b00001000); // %
-        boolean subUnitMil = ((packet[16] & 0b00000100) == 0b00000100); // m
-        boolean subUnitGig = ((packet[16] & 0b00000010) == 0b00000010); // G
-        boolean subUnitMeg = ((packet[16] & 0b00000001) == 0b00000001); // M
-        boolean subUnitDbm = ((packet[17] & 0b10000000) == 0b10000000); // dBm
-        boolean subUnitVlt = ((packet[17] & 0b01000000) == 0b01000000); // V
-        boolean subUnitOhm = ((packet[17] & 0b00100000) == 0b00100000); // ohm
-        boolean subUnitKil = ((packet[17] & 0b00010000) == 0b00010000); // k
-        boolean subUnitKlv = ((packet[17] & 0b00001000) == 0b00001000); // °K
-        boolean subUnitAmp = ((packet[17] & 0b00000100) == 0b00000100); // A
-        boolean subUnitHrz = ((packet[17] & 0b00000010) == 0b00000010); // Hz
+        if ((packet[17] & 0b00010000) == 0b00010000) // k
+        {
+            data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.KILO);
+        }
+
+        // Sub value unit measurement.
+        data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.NONE);
+
+        if ((packet[16] & 0b00001000) == 0b00001000) // %
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.PERCENT);
+        }
+
+        if ((packet[17] & 0b10000000) == 0b10000000) // dBm
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.DECIBEL_MW);
+        }
+
+        if ((packet[17] & 0b01000000) == 0b01000000) // V
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.VOLT);
+        }
+
+        if ((packet[17] & 0b00100000) == 0b00100000) // ohm
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.OHM);
+        }
+
+        if ((packet[17] & 0b00001000) == 0b00001000) // °K
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.KELVIN);
+        }
+
+        if ((packet[17] & 0b00000100) == 0b00000100) // A
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.AMPERE);
+        }
+
+        if ((packet[17] & 0b00000010) == 0b00000010) // Hz
+        {
+            data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.HERTZ);
+        }
+
+        // Sub value unit type
+        data.subValue.unit.setType(Data.Value.Unit.Type.NONE); // Clear.
+
+        if ((packet[3] & 0b00000100) == 0b00000100) // AC
+        {
+            data.subValue.unit.setType(Data.Value.Unit.Type.AC);
+        }
+
+        if ((packet[3] & 0b00000001) == 0b00000001) // DC
+        {
+            data.subValue.unit.setType(Data.Value.Unit.Type.DC);
+        }
 
         // Bar graph...
         Integer barGraph = null;
