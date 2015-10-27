@@ -19,7 +19,7 @@ Detailed documentation on this library and implementation is coming soon. In the
 #### Main class
 
 Your main class may look something like this:
-```
+```java
 import com.dariancabot.protek608.Protek608;
 
 public class MyNewApp
@@ -40,7 +40,7 @@ public class MyNewApp
 #### Event Listener class
 
 Your event listener class (to handle data) may look like this:
-```
+```java
 import com.dariancabot.protek608.EventListener;
 
 public class Events implements EventListener
@@ -58,7 +58,7 @@ public class Events implements EventListener
 #### Data statistics
 
 You can also access statistical data like this:
-```
+```java
 // Enable statistics for the main DMM value.
 MyNewApp.protek608.data.mainValue.statistics.setEnabled(true);
 
