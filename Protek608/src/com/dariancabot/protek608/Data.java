@@ -40,6 +40,16 @@ public final class Data
             private Measurement measurement = Measurement.NONE;
 
 
+            /**
+             * The signal type.
+             * <p>
+             * Types that can be used:
+             * <ul>
+             * <li>{@link #AC} - Alternating Current
+             * <li>{@link #DC} - Direct Current
+             * <li>{@link #PW} - Pulse Width
+             * </ul>
+             */
             public enum Type
             {
                 NONE(null, null),
@@ -71,6 +81,20 @@ public final class Data
             }
 
 
+            /**
+             * The unit SI prefix, or multiplier.
+             * <p>
+             * Prefixes that can be used:
+             * <ul>
+             * <li>{@link #NONE}
+             * <li>{@link #NANO}
+             * <li>{@link #MICRO}
+             * <li>{@link #MILLI}
+             * <li>{@link #KILO}
+             * <li>{@link #MEGA}
+             * <li>{@link #GIGA}
+             * </ul>
+             */
             public enum Prefix
             {
                 NONE(null, null, 0),
@@ -113,6 +137,27 @@ public final class Data
             }
 
 
+            /**
+             * The unit measurement.
+             * <p>
+             * Measurements that can be used:
+             * <ul>
+             * <li>{@link #NONE}
+             * <li>{@link #VOLT}
+             * <li>{@link #AMPERE}
+             * <li>{@link #OHM}
+             * <li>{@link #FARAD}
+             * <li>{@link #HERTZ}
+             * <li>{@link #PERCENT}
+             * <li>{@link #DEG_C}
+             * <li>{@link #DEG_F}
+             * <li>{@link #KELVIN}
+             * <li>{@link #DECIBEL_MW}
+             * <li>{@link #SIEMENS}
+             * <li>{@link #SECOND}
+             * <li>{@link #S}
+             * </ul>
+             */
             public enum Measurement
             {
                 NONE(null, null),
@@ -480,28 +525,167 @@ public final class Data
      */
     public class Flags
     {
+        /**
+         * This Feature is used for conserving battery power. When the meter is left on for more than 15 minutes without pressing keys or rotating the rotary
+         * switch the meter will shut off (go in to Auto power off status).
+         * <p>
+         * The meter can be restarted by pressing the ENTER key or turning the rotary switch to the off position and then back to its original position.
+         * <p>
+         * This feature can be disabled by selecting the Auto off annunciator from the menu and then press the enter Key. The Annunciator will disappear from
+         * the LCD. This is the continuous use mode; the meter will operate until the battery is drained.
+         */
         public boolean autoOff;
-        public boolean pulse;
+        /**
+         * Indicates the polarity of the pulse being measured in pulse width and duty cycle function.
+         */
+        public boolean pulse; // TODO: Should be coupled with pos/neg. See manual page 35.
+        /**
+         * The MAX capture mode stores the highest of the measured values into memory and displays this on the main display.
+         * <p>
+         * The meter can capture and hold signal level changes 100mS or greater in duration. If a shorter capture time is required, use the peak detection mode.
+         * <p>
+         * To display the MAX value:
+         * <ol>
+         * <li>Press the MENU key
+         * <li>Press the RIGHT or LEFT key to move the blinking cursor to MAX
+         * <li>Press the ENTER key to select and start MAX capture. To clear the present value of MAX or restart the capture mode, press the ENTER key.
+         * </ol>
+         */
         public boolean max;
+        /**
+         * The peak detection mode is for capturing high-speed changes in signal level of 5mS or greater in duration. This mode is available only in DCMV, DCV,
+         * DCUA, DCMA and DCA.
+         * <p>
+         * To use this mode press the MENU key and move the blinking cursor to + Peak for positive signals or - Peak ({@link #negPeak}) for negative signals
+         * with the RIGHT or LEFT keys then press ENTER. To clear the present value of the peak or to restart the peak detection mode, press the ENTER key only.
+         */
         public boolean posPeak;
+        /**
+         * Relative mode.
+         */
         public boolean rel;
+        /**
+         * This function recalls data from a memory location that data has been previously stored ({@link #store}).
+         * <p>
+         * To Recall a memory location:
+         * <ol>
+         * <li>Press the MENU key.
+         * <li>Move the LEFT or RIGHT key to position the blinking cursor over recall.
+         * <li>Press the ENTER key.
+         * <li>Press the LEFT or RIGHT key to select the desired memory address. The main display will read the contents of the memory indicated by the address
+         * number on the secondary display.
+         * </ol>
+         */
         public boolean recall;
+        /**
+         * The GO/NG function provides an easy way to determine if a reading falls within a designated range of values. The LCD indicates on the primary display
+         * if the input value is out of (fail) or within the range (pass), which you selected. Before starting the GO/NG function, the tolerance range that an
+         * input value will be compared against must be set. This can be accomplished with the following procedure:
+         * <ol>
+         * <li>Press the menu key.
+         * <li>Move the blinking cursor to GO/NG.
+         * <li>Press the ENTER key to select the GO/NG function mode and to enter the input reference value. The display will show the memory address number in
+         * the secondary display and the memory contents in the main display used as the reference value.
+         * <li>There are 2 ways for inputting the reference value. Method 1: Direct input of reference value by the following method. Press the ENTER key for
+         * longer than 1sec to modify the contents of the reference memory. The first digit will start blinking. The digit value may be changed by pressing the
+         * LEFT/RIGHT arrow keys. Pressing the ENTER key again will cause the second digit to blink. Press the LEFT/RIGHT keys to change the digit value as
+         * required and then press the enter key. This will make the next digit blink. In the same manner, change its value and likewise for all the remaining
+         * digits. After the last digit is entered, the negative sign will blink. Press the LEFT/RIGHT keys to select positive or negative and press the enter
+         * key. This will make the first decimal point blink. Press the LEFT/RIGHT keys to move the dedmal point to appropriate position and then press the
+         * enter key. This oompletes the input of reference value and displays the +% annunciator on the top right of the display and a blinking secondary
+         * display. The +% tolerance is entered through the secondary display by pressing the RIGHT/LEFT keys Pressing the ENTER key will store the + tolerance
+         * value and display the Tolerance annunciator To enter the % value use the same procedure as for the +% tolerance value. C1nce the -% tolerance is
+         * entered the GO/NG function will start.
+         * <li>The second method is the indirect input from one of 10 memories (see {@link #store} and {@link #recall}). The data stored in one of the 10 memory
+         * locations can be used as the reference by the following procedure: fuform the-Steps 1 through 3 in this section. Press the LefVRight keys to select
+         * the memory address number where the reference value is stored, then press the ENTER key. This setS the input reference value. To set the +% and %
+         * tolerances use the procedure in step 4 above.
+         * </ol>
+         */
         public boolean goNg;
         public boolean posPercent;
+        /**
+         * Serial data interface with computer
+         */
         public boolean rs232;
         public boolean pos;
         public boolean neg;
+        /**
+         * The MIN capture mode stores the lowest of the measured values into memory and displays this on the main display.
+         * <p>
+         * The meter can capture and hold signal level changes 100mS or greater in duration. If a shorter capture time is required, use the peak detection mode.
+         * <p>
+         * To display the MIN value:
+         * <ol>
+         * <li>Press the MENU key
+         * <li>Press the RIGHT or LEFT key to move the blinking cursor to MIN
+         * <li>Press the ENTER key to select and start MIN capture. To clear the present value of MIN or restart the capture mode, press the ENTER key.
+         * </ol>
+         */
         public boolean min;
+        /**
+         * The peak detection mode is for capturing high-speed changes in signal level of 5mS or greater in duration. This mode is available only in DCMV, DCV,
+         * DCUA, DCMA and DCA.
+         * <p>
+         * To use this mode press the MENU key and move the blinking cursor to + Peak ({@link #posPeak}) for positive signals or - Peak for negative signals
+         * with the RIGHT or LEFT keys then press ENTER. To clear the present value of the peak or to restart the peak detection mode, press the ENTER key only.
+         */
         public boolean negPeak;
+        /**
+         * The AVG function mode is useful for measuring a signal, which contains ripple, noise, or fluctuations.
+         * <p>
+         * Strictly speaking; this AVG function is different from the average by mathematical definition. More exactly it is a smoothing function, which reduces
+         * changes due to ripple or fluctuation by 100 times from the following calculation:
+         * <p>
+         * AVG = [sum of previous 100 data measured] / 100
+         */
         public boolean avg;
+        /**
+         * Up to 10 measurements can be stored or recalled ({@link #recall}) in memory at any time.
+         * <p>
+         * To store a measurement value in memory:
+         * <ol>
+         * <li>Press the MENU key
+         * <li>Press the LEFT/RIGHT arrow keys to position the blinking cursor over the STORE annunciator
+         * <li>Press the ENTER key to select the store mode.
+         * <li>Press the left or right key to select appropriate memory address. The secondary display will show the address number. Pressing the ENTER key
+         * stores the displayed measurement reading Note Only numerical data can be stored in memory. OPEN/SHRT Continuity and GO/NG test data cannot be stored
+         * in memory
+         * <li>The memories used for this function are nonvolatile type of EEPROM. So the memory contents are not erased when the batteries go dead or replace.
+         * The only way to change the data is by writing new data to a location.
+         * </ol>
+         */
         public boolean store;
+        /**
+         * Reference value for going test
+         */
         public boolean ref;
         public boolean negPercent;
+        /**
+         * A Battery symbol appears on the display when the battery voltage falls below 6±1V.
+         * <p>
+         * The Battery symbol warns the user to replace the current battery with a new one.
+         */
         public boolean lowBattery;
+        /**
+         * Indicates manual range mode
+         */
         public boolean range;
+        /**
+         * Indicates the data hold key was pressed.
+         */
         public boolean hold;
+        /**
+         * Duty cycle test
+         */
         public boolean duty;
+        /**
+         * Continuity test mode
+         */
         public boolean audio;
+        /**
+         * Zener diode test
+         */
         public boolean diode;
     }
 
