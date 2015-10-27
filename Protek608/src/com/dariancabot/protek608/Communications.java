@@ -109,7 +109,7 @@ public final class Communications implements SerialPortEventListener
                                 //System.out.println(bytesToHex(packetBuffer));
                             }
                         }
-                        else if (packetBuffer[0] == 0x5b)//packetStartByte)
+                        else if (packetBuffer[0] == packetStartByte)
                         {
                             packetBufferActive = true;
                             packetBufferPosition = 1;

@@ -12,9 +12,13 @@ public final class Data
 {
 
     public Value mainValue = new Value();
+
     public Value subValue = new Value();
 
     public Integer barGraph = null;
+
+    public byte[] packetRaw = null;
+    public byte[] packetTidy = null;
 
 
     public static class Value
@@ -69,12 +73,12 @@ public final class Data
             public enum Prefix
             {
                 NONE(null, null, 0),
-                NANO("n", "nano", -9),
-                MICRO("µ", "pico", -6),
-                MILLI("m", "milli", -3),
-                KILO("k", "kilo", 3),
-                MEGA("M", "mega", 6),
-                GIGA("G", "giga", 9);
+                NANO("n", "Nano", -9),
+                MICRO("µ", "Micro", -6),
+                MILLI("m", "Milli", -3),
+                KILO("k", "Kilo", 3),
+                MEGA("M", "Mega", 6),
+                GIGA("G", "Giga", 9);
 
                 private final String abbreviation;
                 private final String name;
