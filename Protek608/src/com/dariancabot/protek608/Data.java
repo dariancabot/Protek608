@@ -5,6 +5,7 @@ import java.util.Date;
 
 
 /**
+ * Data Object.
  *
  * @author Darian Cabot
  */
@@ -245,7 +246,7 @@ public final class Data
             private Double average;
 
 
-            public void isEnabled(boolean value)
+            public void setEnabled(boolean value)
             {
                 isEnabled = value;
             }

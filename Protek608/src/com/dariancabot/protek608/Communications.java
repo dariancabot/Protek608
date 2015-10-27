@@ -8,6 +8,7 @@ import jssc.SerialPortException;
 
 
 /**
+ * Communications Object.
  *
  * @author Darian Cabot
  */
@@ -27,6 +28,11 @@ public final class Communications implements SerialPortEventListener
     private final byte[] packetBuffer = new byte[43];
     private int packetBufferPosition = 0;
     private boolean packetBufferActive = false;
+
+    /**
+     * Used by {@link #bytesToHex(byte[])}
+     */
+    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 
 
     //-----------------------------------------------------------------------
@@ -165,15 +171,17 @@ public final class Communications implements SerialPortEventListener
         return isDsrOn;
     }
 
+
     //-----------------------------------------------------------------------
     /**
      * Converts a byte array into a hex String.
      *
+     * @param bytes A byte array to be converted to a HEX String
+     *
+     * @return A String of HEX represntation of the passed byte array
+     *
      * @see http://stackoverflow.com/a/9855338
      */
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
-
     public static String bytesToHex(byte[] bytes)
     {
         char[] hexChars = new char[bytes.length * 2];

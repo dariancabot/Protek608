@@ -4,6 +4,7 @@ import com.dariancabot.protek608.exceptions.ProtocolException;
 
 
 /**
+ * The Decoder class is used to decode data packets from a Protek 608 DMM and update a provided {@link Data} Object with the aquired data.
  *
  * @author Darian Cabot
  */
@@ -623,6 +624,12 @@ public final class Decoder
     }
 
 
+    //-----------------------------------------------------------------------
+    /**
+     * Sets an EventListener to be notified when data is received over the Serial Port.
+     *
+     * @param eventListener An EventListener Object to be notified when data is received
+     */
     public void setEventListener(EventListener eventListener)
     {
         this.eventListener = eventListener;
