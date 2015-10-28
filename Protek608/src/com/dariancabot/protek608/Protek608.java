@@ -266,13 +266,11 @@ public final class Protek608
             serialPort.setParams(9600, 7, 1, 0); // Set params
             int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR; // Prepare mask
             serialPort.setEventsMask(mask); // Set mask
-            //serialPort.addEventListener(new Communications()); // Add SerialPortEventListener
             serialPort.addEventListener(communications); // Add SerialPortEventListener
 
             System.out.println("Connected to serial port: " + serialPort.getPortName() + ".");
 
             isConnected = true;
-
             data.mainValue.statistics.setEnabled(true);
 
             return true;

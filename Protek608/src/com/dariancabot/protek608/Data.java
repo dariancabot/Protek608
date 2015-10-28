@@ -515,15 +515,15 @@ public final class Data
 
     }
 
-    public Flags flags = new Flags();
+    public Annunciators annunciators = new Annunciators();
 
 
     /**
-     * Flags are modes or options that the Protek 608 DMM can have enabled or disabled.
+     * Annunciators are modes or options that the Protek 608 DMM can have enabled or disabled.
      *
      * These are usually displayed on the LCD, and the status of each is available as a boolean in this class.
      */
-    public class Flags
+    public class Annunciators
     {
         /**
          * This Feature is used for conserving battery power. When the meter is left on for more than 15 minutes without pressing keys or rotating the rotary
@@ -551,7 +551,7 @@ public final class Data
          * <li>Press the ENTER key to select and start MAX capture. To clear the present value of MAX or restart the capture mode, press the ENTER key.
          * </ol>
          */
-        public boolean max;
+        public boolean maximum;
         /**
          * The peak detection mode is for capturing high-speed changes in signal level of 5mS or greater in duration. This mode is available only in DCMV, DCV,
          * DCUA, DCMA and DCA.
@@ -563,7 +563,7 @@ public final class Data
         /**
          * Relative mode.
          */
-        public boolean rel;
+        public boolean relative;
         /**
          * This function recalls data from a memory location that data has been previously stored ({@link #store}).
          * <p>
@@ -607,9 +607,9 @@ public final class Data
         /**
          * Serial data interface with computer
          */
-        public boolean rs232;
-        public boolean pos;
-        public boolean neg;
+        public boolean rs232c;
+        public boolean positive; // TODO: Should be used in conjunction with PULSE.
+        public boolean negative; // TODO: Should be used in conjunction with PULSE.
         /**
          * The MIN capture mode stores the lowest of the measured values into memory and displays this on the main display.
          * <p>
@@ -622,7 +622,7 @@ public final class Data
          * <li>Press the ENTER key to select and start MIN capture. To clear the present value of MIN or restart the capture mode, press the ENTER key.
          * </ol>
          */
-        public boolean min;
+        public boolean minimum;
         /**
          * The peak detection mode is for capturing high-speed changes in signal level of 5mS or greater in duration. This mode is available only in DCMV, DCV,
          * DCUA, DCMA and DCA.
@@ -639,7 +639,7 @@ public final class Data
          * <p>
          * AVG = [sum of previous 100 data measured] / 100
          */
-        public boolean avg;
+        public boolean average;
         /**
          * Up to 10 measurements can be stored or recalled ({@link #recall}) in memory at any time.
          * <p>
@@ -659,7 +659,7 @@ public final class Data
         /**
          * Reference value for going test
          */
-        public boolean ref;
+        public boolean reference;
         public boolean negPercent;
         /**
          * A Battery symbol appears on the display when the battery voltage falls below 6±1V.
@@ -682,11 +682,11 @@ public final class Data
         /**
          * Continuity test mode
          */
-        public boolean audio;
+        public boolean continuity;
         /**
          * Zener diode test
          */
-        public boolean diode;
+        public boolean zenerDiode;
     }
 
 }

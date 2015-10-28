@@ -17,8 +17,8 @@ public final class Communications implements SerialPortEventListener
     private SerialPort serialPort;
     private final Decoder decoder;
 
-    private final byte packetStartByte = 0x5b;
-    private final byte packetEndByte = 0x5d;
+    private static final byte packetStartByte = 0x5b;
+    private static final byte packetEndByte = 0x5d;
 
     // RS-232 Control lines.
     // TODO: Irrelevant? Remove?
@@ -32,7 +32,7 @@ public final class Communications implements SerialPortEventListener
     /**
      * Used by {@link #bytesToHex(byte[])}
      */
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
 
 
     //-----------------------------------------------------------------------

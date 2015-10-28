@@ -215,28 +215,28 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(4));
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 
 
@@ -281,28 +281,28 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(null)); // Bar graph not shown.
 
-        assertThat("audio flag", data.flags.audio, equalTo(true));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(false));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(true));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(true));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(false));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(true));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 
 
@@ -346,28 +346,28 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(22703));
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(true));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(true));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(true));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(true));
     }
 
 
@@ -411,28 +411,28 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(0)); // Minimum.
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 
 
@@ -478,28 +478,28 @@ public class DecoderTest
         //System.out.println("Bar graph: " + Integer.toBinaryString(data.barGraph));
         assertThat(data.barGraph, equalTo(32767)); // Maximum.
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 
 
@@ -545,28 +545,28 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(0));
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(true));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(true));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(true));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(true));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(true));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(true));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 
 
@@ -612,27 +612,27 @@ public class DecoderTest
 
         assertThat(data.barGraph, equalTo(0));
 
-        assertThat("audio flag", data.flags.audio, equalTo(false));
-        assertThat("autoOff flag", data.flags.autoOff, equalTo(true));
-        assertThat("avg flag", data.flags.avg, equalTo(false));
-        assertThat("diode flag", data.flags.diode, equalTo(false));
-        assertThat("duty flag", data.flags.duty, equalTo(false));
-        assertThat("goNg flag", data.flags.goNg, equalTo(false));
-        assertThat("hold flag", data.flags.hold, equalTo(false));
-        assertThat("max flag", data.flags.max, equalTo(false));
-        assertThat("min flag", data.flags.min, equalTo(false));
-        assertThat("neg flag", data.flags.neg, equalTo(false));
-        assertThat("negPeak flag", data.flags.negPeak, equalTo(false));
-        assertThat("negPercent flag", data.flags.negPercent, equalTo(false));
-        assertThat("pos flag", data.flags.pos, equalTo(false));
-        assertThat("posPeak flag", data.flags.posPeak, equalTo(false));
-        assertThat("posPercent flag", data.flags.posPercent, equalTo(false));
-        assertThat("pulse flag", data.flags.pulse, equalTo(false));
-        assertThat("range flag", data.flags.range, equalTo(false));
-        assertThat("recall flag", data.flags.recall, equalTo(false));
-        assertThat("ref flag", data.flags.ref, equalTo(false));
-        assertThat("rel flag", data.flags.rel, equalTo(false));
-        assertThat("rs232 flag", data.flags.rs232, equalTo(true));
-        assertThat("store flag", data.flags.store, equalTo(false));
+        assertThat("audio flag", data.annunciators.continuity, equalTo(false));
+        assertThat("autoOff flag", data.annunciators.autoOff, equalTo(true));
+        assertThat("avg flag", data.annunciators.average, equalTo(false));
+        assertThat("diode flag", data.annunciators.zenerDiode, equalTo(false));
+        assertThat("duty flag", data.annunciators.duty, equalTo(false));
+        assertThat("goNg flag", data.annunciators.goNg, equalTo(false));
+        assertThat("hold flag", data.annunciators.hold, equalTo(false));
+        assertThat("max flag", data.annunciators.maximum, equalTo(false));
+        assertThat("min flag", data.annunciators.minimum, equalTo(false));
+        assertThat("neg flag", data.annunciators.negative, equalTo(false));
+        assertThat("negPeak flag", data.annunciators.negPeak, equalTo(false));
+        assertThat("negPercent flag", data.annunciators.negPercent, equalTo(false));
+        assertThat("pos flag", data.annunciators.positive, equalTo(false));
+        assertThat("posPeak flag", data.annunciators.posPeak, equalTo(false));
+        assertThat("posPercent flag", data.annunciators.posPercent, equalTo(false));
+        assertThat("pulse flag", data.annunciators.pulse, equalTo(false));
+        assertThat("range flag", data.annunciators.range, equalTo(false));
+        assertThat("recall flag", data.annunciators.recall, equalTo(false));
+        assertThat("ref flag", data.annunciators.reference, equalTo(false));
+        assertThat("rel flag", data.annunciators.relative, equalTo(false));
+        assertThat("rs232 flag", data.annunciators.rs232c, equalTo(true));
+        assertThat("store flag", data.annunciators.store, equalTo(false));
     }
 }

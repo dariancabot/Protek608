@@ -13,19 +13,138 @@ public final class Decoder
     private final Data data;
     private EventListener eventListener;
 
-    private final byte packetStartByte = 0x5b;
-    private final byte packetEndByte = 0x5d;
+    private static final byte packetStartByte = 0x5b;
+    private static final byte packetEndByte = 0x5d;
 
 
     //-----------------------------------------------------------------------
     /**
-     * Creates a new Decoder instance.
+     * Constructor.
      *
      * @param data the Data object to be used
      */
     public Decoder(Data data)
     {
         this.data = data;
+    }
+
+
+    private static final class BitMask
+    {
+        public static final byte NIBBLE_HIGH = (byte) 0b1111_0000;
+        public static final byte NIBBLE_LOW = (byte) 0b0000_1111;
+
+        // Dispaly digits / characters...
+        public static final byte DIGIT = (byte) 0b1111_1110;
+        public static final byte DIGIT_9 = (byte) 0b1101_1110;
+        public static final byte DIGIT_8 = (byte) 0b1111_1110;
+        public static final byte DIGIT_7 = (byte) 0b1000_1010;
+        public static final byte DIGIT_6 = (byte) 0b1111_0110;
+        public static final byte DIGIT_5 = (byte) 0b1101_0110;
+        public static final byte DIGIT_4 = (byte) 0b0100_1110;
+        public static final byte DIGIT_3 = (byte) 0b1001_1110;
+        public static final byte DIGIT_2 = (byte) 0b1011_1100;
+        public static final byte DIGIT_1 = (byte) 0b0000_1010;
+        public static final byte DIGIT_1P1 = (byte) 0b0000_1011;
+        public static final byte DIGIT_0 = (byte) 0b1111_1010;
+        public static final byte DIGIT_L = (byte) 0b0111_0000;
+        public static final byte DIGIT_P = (byte) 0b1110_1100;
+        public static final byte DIGIT_E = (byte) 0b1111_0100;
+        public static final byte DIGIT_N = (byte) 0b0010_0110;
+        public static final byte DIGIT_H = (byte) 0b0110_0110;
+        public static final byte DIGIT_R = (byte) 0b0010_0100;
+        public static final byte DIGIT_T = (byte) 0b0111_0100;
+        public static final byte DIGIT_A = (byte) 0b0110_1110;
+        public static final byte DIGIT_D = (byte) 0b0011_1110;
+        public static final byte DIGIT_BLANK = (byte) 0b0000_0000;
+
+        // Main value...
+        public static final byte MAIN_DECIMAL_P1 = (byte) 0b0000_0001;
+        public static final byte MAIN_DECIMAL_P2 = (byte) 0b0001_0000;
+        public static final byte MAIN_DECIMAL_P3 = (byte) 0b0001_0000;
+        public static final byte MAIN_DECIMAL_P4 = (byte) 0b0001_0000;
+        public static final byte MAIN_NEGATIVE = (byte) 0b0010_0000;
+        public static final byte MAIN_KILO = (byte) 0b1000_0000;
+        public static final byte MAIN_MEGA = (byte) 0b0000_1000;
+        public static final byte MAIN_MICRO = (byte) 0b0000_0100;
+        public static final byte MAIN_MILLI = (byte) 0b0000_0010;
+        public static final byte MAIN_NANO = (byte) 0b0000_0001;
+        public static final byte MAIN_HERTZ = (byte) 0b0100_0000;
+        public static final byte MAIN_DEG_F = (byte) 0b0010_0000; // °F
+        public static final byte MAIN_S_SM = (byte) 0b0001_0000; // Unknown 's' unit.
+        public static final byte MAIN_OHM = (byte) 0b0000_0100;
+        public static final byte MAIN_AMP = (byte) 0b0000_0010;
+        public static final byte MAIN_FARAD = (byte) 0b0000_0001;
+        public static final byte MAIN_VOLT = (byte) 0b0100_0000;
+        public static final byte MAIN_S_LG = (byte) 0b0010_0000; // Siemens or Seconds.
+        public static final byte MAIN_DEG_C = (byte) 0b0001_0000; // °C
+        public static final byte MAIN_AC = (byte) 0b0100_0000;
+        public static final byte MAIN_DC = (byte) 0b0001_0000;
+        public static final byte MAIN_PW = (byte) 0b0001_0000; // Pulse width.
+
+        // Bar graph...
+        public static final byte BAR_GRAPH_0 = (byte) 0b1000_0000;
+        // Note: The bar graph masks need to be int (not byte) as they are used in bit-shift operations to create a 16-bit value.
+        public static final int BAR_GRAPH_1 = 0b0100_0000;
+        public static final int BAR_GRAPH_2 = 0b0000_1000;
+        public static final int BAR_GRAPH_4 = 0b0000_0100;
+        public static final int BAR_GRAPH_8 = 0b0000_0010;
+        public static final int BAR_GRAPH_16 = 0b0000_0001;
+        public static final int BAR_GRAPH_32 = 0b0001_0000;
+        public static final int BAR_GRAPH_64 = 0b0010_0000;
+        public static final int BAR_GRAPH_128 = 0b0100_0000;
+        public static final int BAR_GRAPH_256 = 0b1000_0000;
+        public static final int BAR_GRAPH_512 = 0b0000_1000;
+        public static final int BAR_GRAPH_1K = 0b0000_0100;
+        public static final int BAR_GRAPH_2K = 0b0000_0010;
+        public static final int BAR_GRAPH_4K = 0b0000_0001;
+        public static final int BAR_GRAPH_8K = 0b0001_0000;
+        public static final int BAR_GRAPH_16K = 0b0010_0000;
+
+        // Sub value...
+        public static final byte SUB_DECIMAL_P6 = (byte) 0b0001_0000;
+        public static final byte SUB_DECIMAL_P7 = (byte) 0b0001_0000;
+        public static final byte SUB_DECIMAL_P8 = (byte) 0b0001_0000;
+        public static final byte SUB_DECIMAL_P9 = (byte) 0b0001_0000;
+        public static final byte SUB_NEGATIVE = (byte) 0b0000_0010;
+        public static final byte SUB_MILLI = (byte) 0b0000_0100;
+        public static final byte SUB_GIGA = (byte) 0b0000_0010;
+        public static final byte SUB_MEGA = (byte) 0b0000_0001;
+        public static final byte SUB_KILO = (byte) 0b0001_0000;
+        public static final byte SUB_PERCENT = (byte) 0b0000_1000; // %
+        public static final byte SUB_DECIBEL_MW = (byte) 0b1000_0000; // dBm
+        public static final byte SUB_VOLT = (byte) 0b0100_0000;
+        public static final byte SUB_OHM = (byte) 0b0010_0000;
+        public static final byte SUB_KELVIN = (byte) 0b0000_1000; // °K
+        public static final byte SUB_AMP = (byte) 0b0000_0100;
+        public static final byte SUB_HERTZ = (byte) 0b0000_0010;
+        public static final byte SUB_AC = (byte) 0b0000_0100;
+        public static final byte SUB_DC = (byte) 0b0000_0001;
+
+        // Flags...
+        public static final byte FLAG_AUTO_OFF = (byte) 0b0010_0000;
+        public static final byte FLAG_PULSE = (byte) 0b1000_0000;
+        public static final byte FLAG_MAXIMUM = (byte) 0b1000_0000;
+        public static final byte FLAG_POS_PEAK = (byte) 0b0100_0000;
+        public static final byte FLAG_RELATIVE = (byte) 0b0010_0000;
+        public static final byte FLAG_RECALL = (byte) 0b0001_0000;
+        public static final byte FLAG_GO_NG = (byte) 0b0000_0001;
+        public static final byte FLAG_POS_PERCENT = (byte) 0b0000_1000;
+        public static final byte FLAG_RS232C = (byte) 0b0001_0000;
+        public static final byte FLAG_POSITIVE = (byte) 0b0000_0100;
+        public static final byte FLAG_NEGATIVE = (byte) 0b0000_1000;
+        public static final byte FLAG_MINIMUM = (byte) 0b0000_1000;
+        public static final byte FLAG_NEG_PEAK = (byte) 0b0000_0100;
+        public static final byte FLAG_AVERAGE = (byte) 0b0000_0010;
+        public static final byte FLAG_STORE = (byte) 0b0000_0001;
+        public static final byte FLAG_REFERENCE = (byte) 0b0000_0010;
+        public static final byte FLAG_NEG_PERCENT = (byte) 0b0000_0100;
+        public static final byte FLAG_LOW_BATTERY = (byte) 0b1000_0000;
+        public static final byte FLAG_ZENER_DIODE = (byte) 0b1000_0000;
+        public static final byte FLAG_RANGE = (byte) 0b0100_0000;
+        public static final byte FLAG_HOLD = (byte) 0b0010_0000;
+        public static final byte FLAG_DUTY = (byte) 0b0001_0000;
+        public static final byte FLAG_CONTINUITY = (byte) 0b0000_1000;
     }
 
 
@@ -47,14 +166,14 @@ public final class Decoder
         }
 
         // Check for start byte of packet.
-        if (buffer[0] != 0x5b)
+        if (buffer[0] != packetStartByte)
         {
             ProtocolException ex = new ProtocolException("Decode error: Packet start byte 0x5b not found at start of packet.");
             throw ex;
         }
 
         // Check for end byte of packet.
-        if (buffer[42] != 0x5d)
+        if (buffer[42] != packetEndByte)
         {
             ProtocolException ex = new ProtocolException("Decode error: Packet end byte 0x5d not found at end of packet.");
             throw ex;
@@ -87,7 +206,7 @@ public final class Decoder
                 rawByte = Integer.reverse(rawByte);
 
                 // Only the last 4-bits/nibble is used for each raw byte.
-                rawByte = (rawByte >> 28) & 0b0000_1111; // Get the last 4 bits.
+                rawByte = (rawByte >> 28) & BitMask.NIBBLE_LOW; // Get the last 4 bits.
 
                 byte thisByte = (byte) rawByte;
 
@@ -111,6 +230,20 @@ public final class Decoder
     }
 
 
+    /**
+     * Checks if a byte's bits match a mask.
+     *
+     * @param data The byte to check
+     * @param mask The bit mask
+     *
+     * @return true if data's bits match the mask, otherwise false
+     */
+    private boolean checkMask(byte data, byte mask)
+    {
+        return (data & mask) == mask;
+    }
+
+
     //-----------------------------------------------------------------------
     /**
      * Decodes a complete serial packet from the Protek 608 DMM. The decoded data will populate the provided Data object.
@@ -120,36 +253,34 @@ public final class Decoder
      */
     private void decodePacket(byte[] packet)
     {
-        byte digitMask = (byte) 0b1111_1110;
-        byte highNibbleMask = (byte) 0b1111_0000;
-        byte lowNibbleMask = (byte) 0b0000_1111;
-        byte decimalMask = (byte) 0b0001_0000;
 
         // Main digit 4.
-        byte digit4Bits = (byte) ((packet[5] << 4) & highNibbleMask);
-        digit4Bits |= (byte) ((packet[6] >> 4) & lowNibbleMask);
-        digit4Bits &= (byte) digitMask;
+        byte digit4Bits = (byte) ((packet[5] << 4) & BitMask.NIBBLE_HIGH);
+        digit4Bits |= (byte) ((packet[6] >> 4) & BitMask.NIBBLE_LOW);
+        digit4Bits &= (byte) BitMask.DIGIT;
 
         // Main digit 3.
-        byte digit3Bits = (byte) ((packet[6] << 4) & highNibbleMask);
-        digit3Bits |= (byte) ((packet[7] >> 4) & lowNibbleMask);
-        digit3Bits &= (byte) digitMask;
+        byte digit3Bits = (byte) ((packet[6] << 4) & BitMask.NIBBLE_HIGH);
+        digit3Bits |= (byte) ((packet[7] >> 4) & BitMask.NIBBLE_LOW);
+        digit3Bits &= (byte) BitMask.DIGIT;
 
         // Main digit 2.
-        byte digit2Bits = (byte) ((packet[7] << 4) & highNibbleMask);
-        digit2Bits |= (byte) ((packet[8] >> 4) & lowNibbleMask);
-        digit2Bits &= (byte) digitMask;
+        byte digit2Bits = (byte) ((packet[7] << 4) & BitMask.NIBBLE_HIGH);
+        digit2Bits |= (byte) ((packet[8] >> 4) & BitMask.NIBBLE_LOW);
+        digit2Bits &= (byte) BitMask.DIGIT;
 
         // Main digit 1.
         byte digit1Bits = (byte) packet[11];
+        digit1Bits &= (byte) BitMask.DIGIT;
 
         // Main digit 0.
         byte digit0Bits = (byte) packet[12];
+        digit0Bits &= (byte) BitMask.DIGIT;
 
         String mainDigits = decodeDigit(digit4Bits);
 
         // Decimal place P4 (left-most)...
-        if ((packet[6] & decimalMask) == decimalMask)
+        if (checkMask(packet[6], BitMask.MAIN_DECIMAL_P4))
         {
             mainDigits += ".";
         }
@@ -157,7 +288,7 @@ public final class Decoder
         mainDigits += decodeDigit(digit3Bits);
 
         // Decimal place P3...
-        if ((packet[7] & decimalMask) == decimalMask)
+        if (checkMask(packet[7], BitMask.MAIN_DECIMAL_P3))
         {
             mainDigits += ".";
         }
@@ -165,7 +296,7 @@ public final class Decoder
         mainDigits += decodeDigit(digit2Bits);
 
         // Decimal place P2...
-        if ((packet[8] & decimalMask) == decimalMask)
+        if (checkMask(packet[8], BitMask.MAIN_DECIMAL_P2))
         {
             mainDigits += ".";
         }
@@ -173,7 +304,7 @@ public final class Decoder
         mainDigits += decodeDigit(digit1Bits);
 
         // Decimal place P1...
-        if ((packet[11] & 0b0000_0001) == 0b0000_0001)
+        if (checkMask(packet[11], BitMask.MAIN_DECIMAL_P1))
         {
             mainDigits += ".";
         }
@@ -181,7 +312,7 @@ public final class Decoder
         mainDigits += decodeDigit(digit0Bits); // Digit 0 (right-most).
 
         // Main-digit negative sign...
-        if ((packet[5] & 0b0010_0000) == 0b0010_0000)
+        if (checkMask(packet[5], BitMask.MAIN_NEGATIVE))
         {
             mainDigits = "-" + mainDigits;
         }
@@ -196,27 +327,27 @@ public final class Decoder
         // Main value unit prefix.
         data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.NONE);
 
-        if ((packet[14] & 0b1000_0000) == 0b1000_0000) // k
+        if (checkMask(packet[14], BitMask.MAIN_KILO))
         {
             data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.KILO);
         }
 
-        if ((packet[14] & 0b0000_1000) == 0b0000_1000) // M
+        if (checkMask(packet[14], BitMask.MAIN_MEGA))
         {
             data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MEGA);
         }
 
-        if ((packet[14] & 0b0000_0100) == 0b0000_0100) // u
+        if (checkMask(packet[14], BitMask.MAIN_MICRO))
         {
             data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MICRO);
         }
 
-        if ((packet[14] & 0b0000_0010) == 0b0000_0010) // m
+        if (checkMask(packet[14], BitMask.MAIN_MILLI))
         {
             data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.MILLI);
         }
 
-        if ((packet[14] & 0b0000_0001) == 0b0000_0001) // n
+        if (checkMask(packet[14], BitMask.MAIN_NANO))
         {
             data.mainValue.unit.setPrefix(Data.Value.Unit.Prefix.NANO);
         }
@@ -224,47 +355,49 @@ public final class Decoder
         // Main value unit measurement.
         data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.NONE);
 
-        if ((packet[13] & 0b0100_0000) == 0b0100_0000) // Hz
+        if (checkMask(packet[13], BitMask.MAIN_HERTZ))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.HERTZ);
         }
 
-        if ((packet[13] & 0b0010_0000) == 0b0010_0000) // °F
+        if (checkMask(packet[13], BitMask.MAIN_DEG_F))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.DEG_F);
         }
 
-        if ((packet[13] & 0b0001_0000) == 0b0001_0000) // s
+        // The (lowercase) 's' unit is on the DMM's LCD, however I haven't seen it used and I don't know it's meaning.
+        // It's included here so the packet is completly decoded, but it's meaning is unknown. Can anyone enlighten me?
+        if (checkMask(packet[13], BitMask.MAIN_S_SM))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.S);
         }
 
-        if ((packet[13] & 0b0000_0100) == 0b0000_0100) // ohm
+        if (checkMask(packet[13], BitMask.MAIN_OHM))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.OHM);
         }
 
-        if ((packet[13] & 0b0000_0010) == 0b0000_0010) // A
+        if (checkMask(packet[13], BitMask.MAIN_AMP))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.AMPERE);
         }
 
-        if ((packet[13] & 0b0000_0001) == 0b0000_0001) // F
+        if (checkMask(packet[13], BitMask.MAIN_FARAD))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.FARAD);
         }
 
-        if ((packet[14] & 0b0100_0000) == 0b0100_0000) // V
+        if (checkMask(packet[14], BitMask.MAIN_VOLT))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.VOLT);
         }
 
-        if ((packet[14] & 0b0010_0000) == 0b0010_0000) // S
+        if (checkMask(packet[14], BitMask.MAIN_S_LG))
         {
             // There are two units that use the same 'S' symbol on the display.
             // Determine the correct one by checking for pulse width (seconds).
 
-            if ((packet[4] & 0b0001_0000) == 0b0001_0000) // PW
+            if (checkMask(packet[4], BitMask.MAIN_PW))
             {
                 // Pulse width, so in this case 'S' means SECOND.
                 data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.SECOND);
@@ -276,7 +409,7 @@ public final class Decoder
             }
         }
 
-        if ((packet[14] & 0b0001_0000) == 0b0001_0000) // °C
+        if (checkMask(packet[14], BitMask.MAIN_DEG_C))
         {
             data.mainValue.unit.setMeasurement(Data.Value.Unit.Measurement.DEG_C);
         }
@@ -284,46 +417,46 @@ public final class Decoder
         // Main value unit type.
         data.mainValue.unit.setType(Data.Value.Unit.Type.NONE); // Clear.
 
-        if ((packet[5] & 0b0100_0000) == 0b0100_0000) // AC
+        if (checkMask(packet[5], BitMask.MAIN_AC))
         {
             data.mainValue.unit.setType(Data.Value.Unit.Type.AC);
         }
 
-        if ((packet[5] & 0b0001_0000) == 0b0001_0000) // DC
+        if (checkMask(packet[5], BitMask.MAIN_DC))
         {
             data.mainValue.unit.setType(Data.Value.Unit.Type.DC);
         }
 
-        if ((packet[4] & 0b0001_0000) == 0b0001_0000) // PW
+        if (checkMask(packet[4], BitMask.MAIN_PW))
         {
             data.mainValue.unit.setType(Data.Value.Unit.Type.PW);
         }
 
         // Sub digits...
-        byte digit9Bits = (byte) ((packet[2] << 4) & highNibbleMask);
-        digit9Bits |= (byte) ((packet[2] >> 4) & lowNibbleMask);
-        digit9Bits &= (byte) digitMask;
+        byte digit9Bits = (byte) ((packet[2] << 4) & BitMask.NIBBLE_HIGH);
+        digit9Bits |= (byte) ((packet[2] >> 4) & BitMask.NIBBLE_LOW);
+        digit9Bits &= (byte) BitMask.DIGIT;
 
-        byte digit8Bits = (byte) ((packet[1] << 4) & highNibbleMask);
-        digit8Bits |= (byte) ((packet[1] >> 4) & lowNibbleMask);
-        digit8Bits &= (byte) digitMask;
+        byte digit8Bits = (byte) ((packet[1] << 4) & BitMask.NIBBLE_HIGH);
+        digit8Bits |= (byte) ((packet[1] >> 4) & BitMask.NIBBLE_LOW);
+        digit8Bits &= (byte) BitMask.DIGIT;
 
-        byte digit7Bits = (byte) ((packet[0] << 4) & highNibbleMask);
-        digit7Bits |= (byte) ((packet[0] >> 4) & lowNibbleMask);
-        digit7Bits &= (byte) digitMask;
+        byte digit7Bits = (byte) ((packet[0] << 4) & BitMask.NIBBLE_HIGH);
+        digit7Bits |= (byte) ((packet[0] >> 4) & BitMask.NIBBLE_LOW);
+        digit7Bits &= (byte) BitMask.DIGIT;
 
-        byte digit6Bits = (byte) ((packet[19] << 4) & highNibbleMask);
-        digit6Bits |= (byte) ((packet[19] >> 4) & lowNibbleMask);
-        digit6Bits &= (byte) digitMask;
+        byte digit6Bits = (byte) ((packet[19] << 4) & BitMask.NIBBLE_HIGH);
+        digit6Bits |= (byte) ((packet[19] >> 4) & BitMask.NIBBLE_LOW);
+        digit6Bits &= (byte) BitMask.DIGIT;
 
-        byte digit5Bits = (byte) ((packet[18] << 4) & highNibbleMask);
-        digit5Bits |= (byte) ((packet[18] >> 4) & lowNibbleMask);
-        digit5Bits &= (byte) digitMask;
+        byte digit5Bits = (byte) ((packet[18] << 4) & BitMask.NIBBLE_HIGH);
+        digit5Bits |= (byte) ((packet[18] >> 4) & BitMask.NIBBLE_LOW);
+        digit5Bits &= (byte) BitMask.DIGIT;
 
         String subDigits = decodeDigit(digit9Bits); // Digit 9 (left-most).
 
         // Decimal place P9 (left-most)...
-        if ((packet[2] & decimalMask) == decimalMask)
+        if (checkMask(packet[2], BitMask.SUB_DECIMAL_P9))
         {
             subDigits += ".";
         }
@@ -331,7 +464,7 @@ public final class Decoder
         subDigits += decodeDigit(digit8Bits);
 
         // Decimal place P8...
-        if ((packet[1] & decimalMask) == decimalMask)
+        if (checkMask(packet[1], BitMask.SUB_DECIMAL_P8))
         {
             subDigits += ".";
         }
@@ -339,7 +472,7 @@ public final class Decoder
         subDigits += decodeDigit(digit7Bits);
 
         // Decimal place P7...
-        if ((packet[0] & decimalMask) == decimalMask)
+        if (checkMask(packet[0], BitMask.SUB_DECIMAL_P7))
         {
             subDigits += ".";
         }
@@ -347,7 +480,7 @@ public final class Decoder
         subDigits += decodeDigit(digit6Bits);
 
         // Decimal place P6...
-        if ((packet[19] & decimalMask) == decimalMask)
+        if (checkMask(packet[19], BitMask.SUB_DECIMAL_P6))
         {
             subDigits += ".";
         }
@@ -355,7 +488,7 @@ public final class Decoder
         subDigits += decodeDigit(digit5Bits); // Digit 5 (right-most).
 
         // Sub-digit negative sign...
-        if ((packet[3] & 0b0000_0010) == 0b0000_0010)
+        if (checkMask(packet[3], BitMask.SUB_NEGATIVE))
         {
             subDigits = "-" + subDigits;
         }
@@ -370,22 +503,22 @@ public final class Decoder
         // Sub value unit prefix.
         data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.NONE);
 
-        if ((packet[16] & 0b0000_0100) == 0b0000_0100) // m
+        if (checkMask(packet[16], BitMask.SUB_MILLI))
         {
             data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.MILLI);
         }
 
-        if ((packet[16] & 0b0000_0010) == 0b0000_0010) // G
+        if (checkMask(packet[16], BitMask.SUB_GIGA))
         {
             data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.GIGA);
         }
 
-        if ((packet[16] & 0b0000_0001) == 0b0000_0001) // M
+        if (checkMask(packet[16], BitMask.SUB_MEGA))
         {
             data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.MEGA);
         }
 
-        if ((packet[17] & 0b0001_0000) == 0b0001_0000) // k
+        if (checkMask(packet[17], BitMask.SUB_KILO))
         {
             data.subValue.unit.setPrefix(Data.Value.Unit.Prefix.KILO);
         }
@@ -393,37 +526,37 @@ public final class Decoder
         // Sub value unit measurement.
         data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.NONE);
 
-        if ((packet[16] & 0b0000_1000) == 0b0000_1000) // %
+        if (checkMask(packet[16], BitMask.SUB_PERCENT))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.PERCENT);
         }
 
-        if ((packet[17] & 0b1000_0000) == 0b1000_0000) // dBm
+        if (checkMask(packet[17], BitMask.SUB_DECIBEL_MW))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.DECIBEL_MW);
         }
 
-        if ((packet[17] & 0b0100_0000) == 0b0100_0000) // V
+        if (checkMask(packet[17], BitMask.SUB_VOLT))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.VOLT);
         }
 
-        if ((packet[17] & 0b0010_0000) == 0b0010_0000) // ohm
+        if (checkMask(packet[17], BitMask.SUB_OHM))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.OHM);
         }
 
-        if ((packet[17] & 0b0000_1000) == 0b0000_1000) // °K
+        if (checkMask(packet[17], BitMask.SUB_KELVIN))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.KELVIN);
         }
 
-        if ((packet[17] & 0b0000_0100) == 0b0000_0100) // A
+        if (checkMask(packet[17], BitMask.SUB_AMP))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.AMPERE);
         }
 
-        if ((packet[17] & 0b0000_0010) == 0b0000_0010) // Hz
+        if (checkMask(packet[17], BitMask.SUB_HERTZ))
         {
             data.subValue.unit.setMeasurement(Data.Value.Unit.Measurement.HERTZ);
         }
@@ -431,12 +564,12 @@ public final class Decoder
         // Sub value unit type
         data.subValue.unit.setType(Data.Value.Unit.Type.NONE); // Clear.
 
-        if ((packet[3] & 0b0000_0100) == 0b0000_0100) // AC
+        if (checkMask(packet[3], BitMask.SUB_AC))
         {
             data.subValue.unit.setType(Data.Value.Unit.Type.AC);
         }
 
-        if ((packet[3] & 0b0000_0001) == 0b0000_0001) // DC
+        if (checkMask(packet[3], BitMask.SUB_DC))
         {
             data.subValue.unit.setType(Data.Value.Unit.Type.DC);
         }
@@ -444,56 +577,56 @@ public final class Decoder
         // Bar graph...
         Integer barGraph = null;
 
-        if ((packet[4] & 0b1000_0000) == 0b1000_0000) // Bar graph '0' set.
+        // Check if Bar Graph 0 segment active (i.e. bar graph displayed).
+        if (checkMask(packet[4], BitMask.BAR_GRAPH_0))
         {
             // Bar graph displayed, so check all segments...
             barGraph = 0;
-            barGraph += ((packet[4] & 0b0100_0000) >> 6); // B1.
-            barGraph += ((packet[4] & 0b0000_1000) >> 2); // B2.
-            barGraph += (packet[4] & 0b0000_0100); // B4.
-            barGraph += ((packet[4] & 0b0000_0010) << 2); // B8.
-            barGraph += ((packet[4] & 0b0000_0001) << 4); // B16.
-            barGraph += ((packet[16] & 0b0001_0000) << 1); // B32.
-            barGraph += ((packet[16] & 0b0010_0000) << 1); // B64.
-            barGraph += ((packet[16] & 0b0100_0000) << 1); // B128.
-            barGraph += ((packet[16] & 0b1000_0000) << 1); // B256.
-            barGraph += ((packet[15] & 0b0000_1000) << 6); // B512.
-            barGraph += ((packet[15] & 0b0000_0100) << 8); // B1K.
-            barGraph += ((packet[15] & 0b0000_0010) << 10); // B2K.
-            barGraph += ((packet[15] & 0b0000_0001) << 12); // B4K.
-            barGraph += ((packet[15] & 0b0001_0000) << 9); // B8K.
-            barGraph += ((packet[15] & 0b0010_0000) << 9); // B16K.
+            barGraph += ((packet[4] & BitMask.BAR_GRAPH_1) >> 6);
+            barGraph += ((packet[4] & BitMask.BAR_GRAPH_2) >> 2);
+            barGraph += (packet[4] & BitMask.BAR_GRAPH_4);
+            barGraph += ((packet[4] & BitMask.BAR_GRAPH_8) << 2);
+            barGraph += ((packet[4] & BitMask.BAR_GRAPH_16) << 4);
+            barGraph += ((packet[16] & BitMask.BAR_GRAPH_32) << 1);
+            barGraph += ((packet[16] & BitMask.BAR_GRAPH_64) << 1);
+            barGraph += ((packet[16] & BitMask.BAR_GRAPH_128) << 1);
+            barGraph += ((packet[16] & BitMask.BAR_GRAPH_256) << 1);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_512) << 6);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_1K) << 8);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_2K) << 10);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_4K) << 12);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_8K) << 9);
+            barGraph += ((packet[15] & BitMask.BAR_GRAPH_16K) << 9);
         }
 
         data.barGraph = barGraph;
 
-        // Set flags...
-        data.flags.autoOff = (packet[9] & 0b0010_0000) == 0b0010_0000;
-        data.flags.pulse = (packet[9] & 0b1000_0000) == 0b1000_0000;
-        data.flags.max = (packet[10] & 0b1000_0000) == 0b1000_0000;
-        data.flags.posPeak = (packet[10] & 0b0100_0000) == 0b0100_0000;
-        data.flags.rel = (packet[10] & 0b0010_0000) == 0b0010_0000;
-        data.flags.recall = (packet[10] & 0b0001_0000) == 0b0001_0000;
-        data.flags.goNg = (packet[10] & 0b0000_0001) == 0b0000_0001;
-        data.flags.posPercent = (packet[10] & 0b0000_1000) == 0b0000_1000;
-        data.flags.rs232 = (packet[9] & 0b0001_0000) == 0b0001_0000;
-        data.flags.pos = (packet[8] & 0b0000_0100) == 0b0000_0100;
-        data.flags.neg = (packet[8] & 0b0000_1000) == 0b0000_1000;
-        data.flags.min = (packet[9] & 0b0000_1000) == 0b0000_1000;
-        data.flags.negPeak = (packet[9] & 0b0000_0100) == 0b0000_0100;
-        data.flags.avg = (packet[9] & 0b0000_0010) == 0b0000_0010;
-        data.flags.store = (packet[9] & 0b0000_0001) == 0b0000_0001;
-        data.flags.ref = (packet[10] & 0b0000_0010) == 0b0000_0010;
-        data.flags.negPercent = (packet[10] & 0b0000_0100) == 0b0000_0100;
-        data.flags.lowBattery = (packet[5] & 0b1000_0000) == 0b1000_0000;
+        // Set annunciators...
+        data.annunciators.autoOff = checkMask(packet[9], BitMask.FLAG_AUTO_OFF);
+        data.annunciators.pulse = checkMask(packet[9], BitMask.FLAG_PULSE);
+        data.annunciators.maximum = checkMask(packet[10], BitMask.FLAG_MAXIMUM);
+        data.annunciators.posPeak = checkMask(packet[10], BitMask.FLAG_POS_PEAK);
+        data.annunciators.relative = checkMask(packet[10], BitMask.FLAG_RELATIVE);
+        data.annunciators.recall = checkMask(packet[10], BitMask.FLAG_RECALL);
+        data.annunciators.goNg = checkMask(packet[10], BitMask.FLAG_GO_NG);
+        data.annunciators.posPercent = checkMask(packet[10], BitMask.FLAG_POS_PERCENT);
+        data.annunciators.rs232c = checkMask(packet[9], BitMask.FLAG_RS232C);
+        data.annunciators.positive = checkMask(packet[8], BitMask.FLAG_POSITIVE);
+        data.annunciators.negative = checkMask(packet[8], BitMask.FLAG_NEGATIVE);
+        data.annunciators.minimum = checkMask(packet[9], BitMask.FLAG_MINIMUM);
+        data.annunciators.negPeak = checkMask(packet[9], BitMask.FLAG_NEG_PEAK);
+        data.annunciators.average = checkMask(packet[9], BitMask.FLAG_AVERAGE);
+        data.annunciators.store = checkMask(packet[9], BitMask.FLAG_STORE);
+        data.annunciators.reference = checkMask(packet[10], BitMask.FLAG_REFERENCE);
+        data.annunciators.negPercent = checkMask(packet[10], BitMask.FLAG_NEG_PERCENT);
+        data.annunciators.lowBattery = checkMask(packet[5], BitMask.FLAG_LOW_BATTERY);
 
-        // The following are refered to as sub (value) units in the manual,
-        // but they seem like global?
-        data.flags.diode = (packet[3] & 0b1000_0000) == 0b1000_0000;
-        data.flags.range = (packet[3] & 0b0100_0000) == 0b0100_0000;
-        data.flags.hold = (packet[3] & 0b0010_0000) == 0b0010_0000;
-        data.flags.duty = (packet[3] & 0b0001_0000) == 0b0001_0000;
-        data.flags.audio = (packet[3] & 0b0000_1000) == 0b0000_1000;
+        // The following are refered to as sub (value) units in the manual, but they seem like global?
+        data.annunciators.zenerDiode = checkMask(packet[3], BitMask.FLAG_ZENER_DIODE);
+        data.annunciators.range = checkMask(packet[3], BitMask.FLAG_RANGE);
+        data.annunciators.hold = checkMask(packet[3], BitMask.FLAG_HOLD);
+        data.annunciators.duty = checkMask(packet[3], BitMask.FLAG_DUTY);
+        data.annunciators.continuity = checkMask(packet[3], BitMask.FLAG_CONTINUITY);
 
         // Notify using the event listener if one is set.
         if (eventListener != null)
@@ -513,107 +646,84 @@ public final class Decoder
      */
     private String decodeDigit(byte digit)
     {
-        // Define the masks to be checked.
-        byte mask9 = (byte) 0b1101_1110;
-        byte mask8 = (byte) 0b1111_1110;
-        byte mask7 = (byte) 0b1000_1010;
-        byte mask6 = (byte) 0b1111_0110;
-        byte mask5 = (byte) 0b1101_0110;
-        byte mask4 = (byte) 0b0100_1110;
-        byte mask3 = (byte) 0b1001_1110;
-        byte mask2 = (byte) 0b1011_1100;
-        byte mask1 = (byte) 0b0000_1010;
-        byte mask1P1 = (byte) 0b0000_1011;
-        byte mask0 = (byte) 0b1111_1010;
-        byte maskL = (byte) 0b0111_0000;
-        byte maskP = (byte) 0b1110_1100;
-        byte maskE = (byte) 0b1111_0100;
-        byte maskN = (byte) 0b0010_0110;
-        byte maskH = (byte) 0b0110_0110;
-        byte maskR = (byte) 0b0010_0100;
-        byte maskT = (byte) 0b0111_0100;
-        byte maskA = (byte) 0b0110_1110;
-        byte maskD = (byte) 0b0011_1110;
-        byte maskBlank = (byte) 0b0000_0000;
-
         // The order that the masks are checked is important! Rearanging this should be done with care.
-        if ((digit | maskBlank) == maskBlank)
+        if ((digit | BitMask.DIGIT_BLANK) == BitMask.DIGIT_BLANK)
         {
             return " ";
         }
-        else if ((digit & mask8) == mask8)
+        else if (checkMask(digit, BitMask.DIGIT_8))
         {
             return "8";
         }
-        else if ((digit & maskA) == maskA)
+        else if (checkMask(digit, BitMask.DIGIT_A))
         {
             return "A";
         }
-        else if ((digit & mask9) == mask9)
+        else if (checkMask(digit, BitMask.DIGIT_9))
         {
             return "9";
         }
-        else if ((digit & mask6) == mask6)
+        else if (checkMask(digit, BitMask.DIGIT_6))
         {
             return "6";
         }
-        else if ((digit & mask5) == mask5)
+        else if (checkMask(digit, BitMask.DIGIT_5))
         {
             return "5";
         }
-        else if ((digit & mask4) == mask4)
+        else if (checkMask(digit, BitMask.DIGIT_4))
         {
             return "4";
         }
-        else if ((digit & mask3) == mask3)
+        else if (checkMask(digit, BitMask.DIGIT_3))
         {
             return "3";
         }
-        else if ((digit & mask2) == mask2)
+        else if (checkMask(digit, BitMask.DIGIT_2))
         {
             return "2";
         }
-        else if ((digit & maskD) == maskD)
+        else if (checkMask(digit, BitMask.DIGIT_D))
         {
             return "d";
         }
-        else if ((digit & maskP) == maskP)
+        else if (checkMask(digit, BitMask.DIGIT_P))
         {
             return "P";
         }
-        else if ((digit & maskE) == maskE)
+        else if (checkMask(digit, BitMask.DIGIT_E))
         {
             return "E";
         }
-        else if ((digit & maskH) == maskH)
+        else if (checkMask(digit, BitMask.DIGIT_H))
         {
             return "h";
         }
-        else if ((digit & maskN) == maskN)
+        else if (checkMask(digit, BitMask.DIGIT_N))
         {
             return "n";
         }
-        else if ((digit & maskT) == maskT)
+        else if (checkMask(digit, BitMask.DIGIT_T))
         {
             return "t";
         }
-        else if ((digit & maskR) == maskR)
+        else if (checkMask(digit, BitMask.DIGIT_R))
         {
             return "r";
         }
-        else if ((( ~ digit &  ~ mask1) ==  ~ mask1) || ( ~ digit &  ~ mask1P1) ==  ~ mask1P1)
+        else if ((checkMask((byte)  ~ digit, (byte)  ~ BitMask.DIGIT_1)) | (checkMask((byte)  ~ digit, (byte)  ~ BitMask.DIGIT_1P1)))
         {
             return "1";
         }
-        else if ((digit & mask0) == mask0)
+        else if (checkMask(digit, BitMask.DIGIT_0))
         {
             return "0";
         }
-        else if ((digit & maskL) == maskL)
+        else if (checkMask(digit, BitMask.DIGIT_L))
         {
             return "L";
         }
-        else if ((digit & mask7) == mask7)
+        else if (checkMask(digit, BitMask.DIGIT_7))
         {
             return "7";
         }
