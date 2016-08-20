@@ -1,3 +1,26 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 Darian Cabot
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.dariancabot.protek608;
 
 import jssc.SerialPort;
@@ -49,68 +72,71 @@ public final class Protek608
     public enum Commands
     {
         /**
-         * The HOLD command 'freezes' the measurement reading on the LCD. No further updates to the LCD display will happen and the HOLD annunciator is
-         * displayed. Sending the HOLD command again restores the DMM to normal operation.
+         * The HOLD command 'freezes' the measurement reading on the LCD. No further updates to the LCD display will happen and the HOLD annunciator
+         * is displayed. Sending the HOLD command again restores the DMM to normal operation.
          */
         HOLD(5),
         /**
-         * The LIGHT command turns on the LCD back light; sending the command again will turn it off. In order to conserve battery power the backlight will
-         * automatically shut off 30 seconds after it is turned on.
+         * The LIGHT command turns on the LCD back light; sending the command again will turn it off. In order to conserve battery power the backlight
+         * will automatically shut off 30 seconds after it is turned on.
          */
         LIGHT(7),
         /**
-         * The relative mode allows the operator to measure values with respect to a reference value other than zero. The relative value is computed by the
-         * equation: Relative = measured - reference.
+         * The relative mode allows the operator to measure values with respect to a reference value other than zero. The relative value is computed
+         * by the equation: Relative = measured - reference.
          * <p>
-         * Sending the RELATIVE command enters the measured value on the LCD as the reference and displays the REL annunciator. Sending the ENTER command only
-         * while in the REL mode updates the Reference Value.
+         * Sending the RELATIVE command enters the measured value on the LCD as the reference and displays the REL annunciator. Sending the ENTER
+         * command only while in the REL mode updates the Reference Value.
          * <p>
-         * Send the REL command to enter the measured value on the LCD as the relative value and to display the REL symbol. Sending the REL command again
-         * releases the relative mode and returns the DMM to the normal mode of operation.
+         * Send the REL command to enter the measured value on the LCD as the relative value and to display the REL symbol. Sending the REL command
+         * again releases the relative mode and returns the DMM to the normal mode of operation.
          * <p>
          * Note:
          * <ul>
-         * <li>The REL mode can only be used for numerical data; it cannot be used for continueinuity, which displays 'open' or 'short' instead of numbers.
+         * <li>The REL mode can only be used for numerical data; it cannot be used for continueinuity, which displays 'open' or 'short' instead of
+         * numbers.
          * <li>The REL mode is especially useful for low ohms measurement, which requires the test lead resistance to be cancelled.
          * </ul>
          */
         RELATIVE(6),
         /**
-         * Sending the MENU command places the meter in the menu mode. Sending this command again will exit from the menu mode and return to the previous
-         * operation.
+         * Sending the MENU command places the meter in the menu mode. Sending this command again will exit from the menu mode and return to the
+         * previous operation.
          * <p>
-         * Once the meter is in the menu mode, all the menu annunciators appear on the upper portion of the LCD with the flashing cursor over one annunciator.
-         * To select the desired menu item, send the {@link #LEFT} or {@link #RIGHT} commands until the flashing cursor is over the desired annunciator, then
-         * send the {@link #ENTER} command to select.
+         * Once the meter is in the menu mode, all the menu annunciators appear on the upper portion of the LCD with the flashing cursor over one
+         * annunciator. To select the desired menu item, send the {@link #LEFT} or {@link #RIGHT} commands until the flashing cursor is over the
+         * desired annunciator, then send the {@link #ENTER} command to select.
          * <p>
-         * The exception to this procedure is the GO/NO Testing function, which is explained in detail in chapter 5 sections 5-7 of the Protek 608 manual.
+         * The exception to this procedure is the GO/NO Testing function, which is explained in detail in chapter 5 sections 5-7 of the Protek 608
+         * manual.
          */
         MENU(8),
         /**
-         * The ALT_FUNCTION command is used for selecting the alternate functions, which share the same position on the rotary function switch (e.g. Hz/PW).
+         * The ALT_FUNCTION command is used for selecting the alternate functions, which share the same position on the rotary function switch (e.g.
+         * Hz/PW).
          * <p>
-         * When the Function selector switch is rotated to this position the default function is HZ. Sending the ALT_FUNCTION command will select PW (pulse
-         * width).
+         * When the Function selector switch is rotated to this position the default function is HZ. Sending the ALT_FUNCTION command will select PW
+         * (pulse width).
          */
         ALT_FUNCTION(1),
         /**
-         * The LEFT command is used to select the manual range mode and shift the present measurement range one decimal place to the left. Each time this key is
-         * pressed the decimal point will shift one place to the left.
+         * The LEFT command is used to select the manual range mode and shift the present measurement range one decimal place to the left. Each time
+         * this key is pressed the decimal point will shift one place to the left.
          * <p>
          * Sending this command in the Menu mode will cause the blinking cursor to move to the left.
          */
         LEFT(2),
         /**
-         * The RIGHT command is used to select the manual range mode and shift the present measurement range one decimal place to the right. Each time this key
-         * is pressed the decimal point will shift one place to the right.
+         * The RIGHT command is used to select the manual range mode and shift the present measurement range one decimal place to the right. Each time
+         * this key is pressed the decimal point will shift one place to the right.
          * <p>
          * Sending this command in the Menu mode will cause the blinking cursor to move to the right.
          */
         RIGHT(3),
         /**
-         * Sending the ENTER command executes the function selected by the {@link #RIGHT} and {@link #LEFT} commands when used with the {@link #MENU} command.
-         * When sent, the blinking annunciator will stop blinking and all the other menu items will disappear. If however, the "AUTO OFF" and "RS232C"
-         * annunciators had been selected previously they will remain on the LCD.
+         * Sending the ENTER command executes the function selected by the {@link #RIGHT} and {@link #LEFT} commands when used with the {@link #MENU}
+         * command. When sent, the blinking annunciator will stop blinking and all the other menu items will disappear. If however, the "AUTO OFF" and
+         * "RS232C" annunciators had been selected previously they will remain on the LCD.
          * <p>
          * Another important function of this key is to restore the power to the meter after AUTO POWER OFF has occurred.
          */
@@ -118,12 +144,10 @@ public final class Protek608
 
         private final int value;
 
-
         private Commands(int value)
         {
             this.value = value;
         }
-
 
         //-----------------------------------------------------------------------
         /**
@@ -138,7 +162,6 @@ public final class Protek608
 
     }
 
-
     //-----------------------------------------------------------------------
     /**
      * Constructor.
@@ -149,7 +172,6 @@ public final class Protek608
         data = new Data();
         decoder = new Decoder(data);
     }
-
 
     //-----------------------------------------------------------------------
     /**
@@ -165,7 +187,6 @@ public final class Protek608
         return portNames;
     }
 
-
     //-----------------------------------------------------------------------
     /**
      * Sends a command to the Protek 608 multimeter over the serial connection.
@@ -178,7 +199,6 @@ public final class Protek608
     {
         serialWrite((byte) command.getValue());
     }
-
 
     //-----------------------------------------------------------------------
     private void serialWrite(Byte data)
@@ -195,7 +215,6 @@ public final class Protek608
             }
         }
     }
-
 
     //-----------------------------------------------------------------------
     /**
@@ -221,7 +240,6 @@ public final class Protek608
         return false;
     }
 
-
     //-----------------------------------------------------------------------
     /**
      * Disconnects/closes the Serial Port connection.
@@ -243,7 +261,6 @@ public final class Protek608
         }
     }
 
-
     //-----------------------------------------------------------------------
     private void initialiseSerialReader()
     {
@@ -255,7 +272,6 @@ public final class Protek608
 
         communications = new Communications(serialPort, decoder);
     }
-
 
     //-----------------------------------------------------------------------
     private boolean connectSerialPort()
@@ -282,7 +298,6 @@ public final class Protek608
             return false;
         }
     }
-
 
     //-----------------------------------------------------------------------
     /**
