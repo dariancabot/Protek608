@@ -3,11 +3,10 @@ A data aquisition Java library for the Protek 608 digital multimeter. [Visit the
 
 ## Current Release
 
-* [Pre-release v1.0-beta](https://github.com/dariancabot/Protek608/releases/tag/v1.0-beta) - Full protocol decoding.
+* [Stable release v1.0.0](https://github.com/dariancabot/Protek608/releases/tag/v1.0.0).
 
 ## Planned Releases
 
-* Release v1.0.0 - Stable release after beta test period.
 * Release v1.1.0 - Enhanced data aquisition and statistics.
 
 ## Documentation
